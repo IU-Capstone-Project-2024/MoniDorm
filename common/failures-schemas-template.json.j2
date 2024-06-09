@@ -1,0 +1,111 @@
+{%- set dormitories = [
+  {
+    "no": 1,
+    "floors": 4
+  },
+  {
+    "no": 2,
+    "floors": 4
+  },
+  {
+    "no": 3,
+    "floors": 4
+  },
+  {
+    "no": 4,
+    "floors": 4
+  },
+  {
+    "no": 5,
+    "floors": 5
+  },
+  {
+    "no": 6,
+    "floors": 13
+  },
+  {
+    "no": 7,
+    "floors": 13
+  }
+] %}
+{%- set dormFailures = [
+  {
+    "id": "elevator",
+    "name" : {
+      "ru" : "Лифт",
+      "en" : "Elevator"
+    }
+  }
+] -%}
+{%- set floorFailures = [
+  {
+    "id": "wifi",
+    "name": {
+      "ru": "Wi-Fi",
+      "en": "Wi-Fi"
+    }
+  },
+  {
+    "id": "electricity",
+    "name": {
+      "ru": "Электричество",
+      "en": "Electricity"
+    }
+  },
+  {
+    "id": "water",
+    "name" : {
+      "ru": "Водоснабжение",
+      "en": "Water supply"
+    }
+  }
+] -%}
+{
+  "type": "category",
+  "id": "dorms",
+  "name": {
+    "ru": "Общежития",
+    "en": "Dorms"
+  },
+  "items" : [ {% for dorm in dormitories %}
+  {
+    "type": "category",
+    "id": "d{{ dorm.no }}",
+    "name": {
+      "ru": "Общежитие {{ dorm.no }}",
+      "en": "Dorm {{ dorm.no }}"
+    },
+    "items": [
+      {%- for failure in dormFailures %}
+      {
+        "type": "failure",
+        "id": "{{ failure.id }}",
+        "name": {
+          "ru": "{{ failure.name.ru }}",
+          "en": "{{ failure.name.en }}"
+        }
+      },
+      {%- endfor -%}
+      {% for f in range(1, dorm.floors + 1) %}
+      {
+        "type": "category",
+        "id": "f{{ f }}",
+        "name": {
+          "ru": "Этаж {{ f }}",
+          "en": "Floor {{ f }}"
+        },
+        "items": [{% for failure in floorFailures %}
+          {
+            "type": "failure",
+            "id": "{{ failure.id }}",
+            "name": {
+              "ru": "{{ failure.name.ru }}",
+              "en": "{{ failure.name.en }}"
+            }
+          }{% if not loop.last %},{% endif %}{% endfor %}
+        ]
+      }{% if not loop.last %},{% endif %}{% endfor %}
+    ]
+  }{% if not loop.last %},{% endif %}{% endfor %}
+]
+}

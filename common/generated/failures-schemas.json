@@ -1,0 +1,1734 @@
+{
+  "type": "category",
+  "id": "dorms",
+  "name": {
+    "ru": "Общежития",
+    "en": "Dorms"
+  },
+  "items" : [ 
+  {
+    "type": "category",
+    "id": "d1",
+    "name": {
+      "ru": "Общежитие 1",
+      "en": "Dorm 1"
+    },
+    "items": [
+      {
+        "type": "failure",
+        "id": "elevator",
+        "name": {
+          "ru": "Лифт",
+          "en": "Elevator"
+        }
+      },
+      {
+        "type": "category",
+        "id": "f1",
+        "name": {
+          "ru": "Этаж 1",
+          "en": "Floor 1"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f2",
+        "name": {
+          "ru": "Этаж 2",
+          "en": "Floor 2"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f3",
+        "name": {
+          "ru": "Этаж 3",
+          "en": "Floor 3"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f4",
+        "name": {
+          "ru": "Этаж 4",
+          "en": "Floor 4"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "category",
+    "id": "d2",
+    "name": {
+      "ru": "Общежитие 2",
+      "en": "Dorm 2"
+    },
+    "items": [
+      {
+        "type": "failure",
+        "id": "elevator",
+        "name": {
+          "ru": "Лифт",
+          "en": "Elevator"
+        }
+      },
+      {
+        "type": "category",
+        "id": "f1",
+        "name": {
+          "ru": "Этаж 1",
+          "en": "Floor 1"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f2",
+        "name": {
+          "ru": "Этаж 2",
+          "en": "Floor 2"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f3",
+        "name": {
+          "ru": "Этаж 3",
+          "en": "Floor 3"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f4",
+        "name": {
+          "ru": "Этаж 4",
+          "en": "Floor 4"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "category",
+    "id": "d3",
+    "name": {
+      "ru": "Общежитие 3",
+      "en": "Dorm 3"
+    },
+    "items": [
+      {
+        "type": "failure",
+        "id": "elevator",
+        "name": {
+          "ru": "Лифт",
+          "en": "Elevator"
+        }
+      },
+      {
+        "type": "category",
+        "id": "f1",
+        "name": {
+          "ru": "Этаж 1",
+          "en": "Floor 1"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f2",
+        "name": {
+          "ru": "Этаж 2",
+          "en": "Floor 2"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f3",
+        "name": {
+          "ru": "Этаж 3",
+          "en": "Floor 3"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f4",
+        "name": {
+          "ru": "Этаж 4",
+          "en": "Floor 4"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "category",
+    "id": "d4",
+    "name": {
+      "ru": "Общежитие 4",
+      "en": "Dorm 4"
+    },
+    "items": [
+      {
+        "type": "failure",
+        "id": "elevator",
+        "name": {
+          "ru": "Лифт",
+          "en": "Elevator"
+        }
+      },
+      {
+        "type": "category",
+        "id": "f1",
+        "name": {
+          "ru": "Этаж 1",
+          "en": "Floor 1"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f2",
+        "name": {
+          "ru": "Этаж 2",
+          "en": "Floor 2"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f3",
+        "name": {
+          "ru": "Этаж 3",
+          "en": "Floor 3"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f4",
+        "name": {
+          "ru": "Этаж 4",
+          "en": "Floor 4"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "category",
+    "id": "d5",
+    "name": {
+      "ru": "Общежитие 5",
+      "en": "Dorm 5"
+    },
+    "items": [
+      {
+        "type": "failure",
+        "id": "elevator",
+        "name": {
+          "ru": "Лифт",
+          "en": "Elevator"
+        }
+      },
+      {
+        "type": "category",
+        "id": "f1",
+        "name": {
+          "ru": "Этаж 1",
+          "en": "Floor 1"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f2",
+        "name": {
+          "ru": "Этаж 2",
+          "en": "Floor 2"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f3",
+        "name": {
+          "ru": "Этаж 3",
+          "en": "Floor 3"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f4",
+        "name": {
+          "ru": "Этаж 4",
+          "en": "Floor 4"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f5",
+        "name": {
+          "ru": "Этаж 5",
+          "en": "Floor 5"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "category",
+    "id": "d6",
+    "name": {
+      "ru": "Общежитие 6",
+      "en": "Dorm 6"
+    },
+    "items": [
+      {
+        "type": "failure",
+        "id": "elevator",
+        "name": {
+          "ru": "Лифт",
+          "en": "Elevator"
+        }
+      },
+      {
+        "type": "category",
+        "id": "f1",
+        "name": {
+          "ru": "Этаж 1",
+          "en": "Floor 1"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f2",
+        "name": {
+          "ru": "Этаж 2",
+          "en": "Floor 2"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f3",
+        "name": {
+          "ru": "Этаж 3",
+          "en": "Floor 3"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f4",
+        "name": {
+          "ru": "Этаж 4",
+          "en": "Floor 4"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f5",
+        "name": {
+          "ru": "Этаж 5",
+          "en": "Floor 5"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f6",
+        "name": {
+          "ru": "Этаж 6",
+          "en": "Floor 6"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f7",
+        "name": {
+          "ru": "Этаж 7",
+          "en": "Floor 7"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f8",
+        "name": {
+          "ru": "Этаж 8",
+          "en": "Floor 8"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f9",
+        "name": {
+          "ru": "Этаж 9",
+          "en": "Floor 9"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f10",
+        "name": {
+          "ru": "Этаж 10",
+          "en": "Floor 10"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f11",
+        "name": {
+          "ru": "Этаж 11",
+          "en": "Floor 11"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f12",
+        "name": {
+          "ru": "Этаж 12",
+          "en": "Floor 12"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f13",
+        "name": {
+          "ru": "Этаж 13",
+          "en": "Floor 13"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "category",
+    "id": "d7",
+    "name": {
+      "ru": "Общежитие 7",
+      "en": "Dorm 7"
+    },
+    "items": [
+      {
+        "type": "failure",
+        "id": "elevator",
+        "name": {
+          "ru": "Лифт",
+          "en": "Elevator"
+        }
+      },
+      {
+        "type": "category",
+        "id": "f1",
+        "name": {
+          "ru": "Этаж 1",
+          "en": "Floor 1"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f2",
+        "name": {
+          "ru": "Этаж 2",
+          "en": "Floor 2"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f3",
+        "name": {
+          "ru": "Этаж 3",
+          "en": "Floor 3"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f4",
+        "name": {
+          "ru": "Этаж 4",
+          "en": "Floor 4"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f5",
+        "name": {
+          "ru": "Этаж 5",
+          "en": "Floor 5"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f6",
+        "name": {
+          "ru": "Этаж 6",
+          "en": "Floor 6"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f7",
+        "name": {
+          "ru": "Этаж 7",
+          "en": "Floor 7"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f8",
+        "name": {
+          "ru": "Этаж 8",
+          "en": "Floor 8"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f9",
+        "name": {
+          "ru": "Этаж 9",
+          "en": "Floor 9"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f10",
+        "name": {
+          "ru": "Этаж 10",
+          "en": "Floor 10"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f11",
+        "name": {
+          "ru": "Этаж 11",
+          "en": "Floor 11"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f12",
+        "name": {
+          "ru": "Этаж 12",
+          "en": "Floor 12"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      },
+      {
+        "type": "category",
+        "id": "f13",
+        "name": {
+          "ru": "Этаж 13",
+          "en": "Floor 13"
+        },
+        "items": [
+          {
+            "type": "failure",
+            "id": "wifi",
+            "name": {
+              "ru": "Wi-Fi",
+              "en": "Wi-Fi"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "electricity",
+            "name": {
+              "ru": "Электричество",
+              "en": "Electricity"
+            }
+          },
+          {
+            "type": "failure",
+            "id": "water",
+            "name": {
+              "ru": "Водоснабжение",
+              "en": "Water supply"
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
+}
