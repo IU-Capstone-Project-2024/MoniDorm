@@ -317,8 +317,12 @@
                         </goals>
                         <configuration>
                             <excludes>
-                                <!-- TO FILL LATER -->
-                                <!-- <exclude>com/java/FileServerApplication*</exclude> -->
+                                <exclude>com/java/api/exception/**</exclude>
+                                <exclude>com/java/api/model/**</exclude>
+                                <exclude>com/java/api/*API.class</exclude>
+                                <exclude>com/java/api/ApiExceptionHandler.class</exclude>
+                                <exclude>com/java/configuration/**</exclude>
+                                <exclude>com/java/MonidormApplication.class</exclude>
                             </excludes>
                         </configuration>
                     </execution>
