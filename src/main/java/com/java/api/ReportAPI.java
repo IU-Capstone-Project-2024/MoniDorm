@@ -72,7 +72,7 @@ public interface ReportAPI {
     )
     ResponseEntity<GetReportListResponse> getAllReports();
 
-    @Operation(summary = "Get all the reports by the date window")
+    @Operation(summary = "Get all the reports by the date window (exclusive)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200",
                      description = "Reports successfully returned",
