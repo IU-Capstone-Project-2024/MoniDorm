@@ -319,10 +319,10 @@
                             <excludes>
                                 <exclude>com/java/api/exception/*</exclude>
                                 <exclude>com/java/api/model/**</exclude>
-                                <exclude>com/java/api/*API.class</exclude>
-                                <exclude>com/java/api/ApiExceptionHandler.class</exclude>
-                                <exclude>com/java/configuration/*</exclude>
-                                <exclude>com/java/MonidormApplication.class</exclude>
+                                <exclude>com/java/api/*API.*</exclude>
+                                <exclude>com/java/api/ApiExceptionHandler*</exclude>
+                                <exclude>com/java/configuration/*.*</exclude>
+                                <exclude>com/java/MonidormApplication*</exclude>
                             </excludes>
                         </configuration>
                     </execution>
