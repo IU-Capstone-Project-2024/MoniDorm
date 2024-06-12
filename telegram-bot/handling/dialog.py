@@ -8,3 +8,5 @@ class DialogStates(StatesGroup):
     AuthorizationConfirmationAwaiting = State()
     # successfully input confirmation code
     Authorized = State()
+    # Reporting state
+    Reporting = State()
