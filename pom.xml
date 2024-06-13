@@ -303,6 +303,18 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-maven-plugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>com/java/api/exception/**</exclude>
+                        <exclude>com/java/api/model/**</exclude>
+                        <exclude>com/java/api/*API*</exclude>
+                        <exclude>com/java/api/ApiExceptionHandler*</exclude>
+                        <exclude>com/java/configuration/**</exclude>
+                        <exclude>com/java/domain/model/Report*</exclude>
+                        <exclude>com/java/domain/repository/**</exclude>
+                        <exclude>com/java/MonidormApplication*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -315,16 +327,6 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <excludes>
-                                <exclude>com/java/api/exception/*</exclude>
-                                <exclude>com/java/api/model/**</exclude>
-                                <exclude>com/java/api/*API.*</exclude>
-                                <exclude>com.java.api.ApiExceptionHandler</exclude>
-                                <exclude>com/java/configuration/*.*</exclude>
-                                <exclude>com/java/MonidormApplication*</exclude>
-                            </excludes>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
