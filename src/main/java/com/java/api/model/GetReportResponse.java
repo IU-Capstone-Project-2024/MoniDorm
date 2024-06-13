@@ -12,7 +12,11 @@ public record GetReportResponse(
     @Min(0) long id,
     @NotBlank String category,
     @NotBlank String placement,
+    String ownerEmail,
+    @NotNull OffsetDateTime failureDate,
     @NotNull OffsetDateTime lastSuccessfullyProceededDate,
-    boolean isResolved
+    boolean isResolved,
+    boolean isConfirmed,
+    String description
 ) {
 }

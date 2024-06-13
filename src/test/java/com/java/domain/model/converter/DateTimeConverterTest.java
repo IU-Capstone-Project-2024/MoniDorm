@@ -1,4 +1,4 @@
-package com.java.domain.repository.model.converter;
+package com.java.domain.model.converter;
 
 import com.java.domain.model.converter.DateTimeConverter;
 import java.sql.Timestamp;

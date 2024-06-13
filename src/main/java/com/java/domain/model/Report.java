@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@EqualsAndHashCode(of = {"id", "category", "placement"})
 public class Report {
     @Id
     @Column(nullable = false)
@@ -36,25 +38,39 @@ public class Report {
     @Convert(converter = DateTimeConverter.class)
     private OffsetDateTime proceededDate;
 
-    @Column(nullable = false)
-    private boolean isConfirmed;
+    private String ownerEmail;
 
     @Column(nullable = false)
-    private boolean isResolved;
+    private boolean isConfirmedByAnalysis;
 
-    public Report(
+    @Column(nullable = false)
+    private boolean isConfirmedByAdmin;
+
+    @Column(nullable = false)
+    private boolean isResolvedByUser;
+
+    @Column(nullable = false)
+    private boolean isResolvedByAdmin;
+
+    @SuppressWarnings("checkstyle:ParameterNumber") public Report(
         String category,
         String placement,
         OffsetDateTime failureDate,
+        String ownerEmail,
         OffsetDateTime proceededDate,
-        boolean isConfirmed,
-        boolean isResolved
+        boolean isConfirmedByAnalysis,
+        boolean isConfirmedByAdmin,
+        boolean isResolvedByUser,
+        boolean isResolvedByAdmin
     ) {
         this.category = category;
         this.placement = placement;
         this.failureDate = failureDate;
+        this.ownerEmail = ownerEmail;
         this.proceededDate = proceededDate;
-        this.isConfirmed = isConfirmed;
-        this.isResolved = isResolved;
+        this.isConfirmedByAnalysis = isConfirmedByAnalysis;
+        this.isConfirmedByAdmin = isConfirmedByAdmin;
+        this.isResolvedByUser = isResolvedByUser;
+        this.isResolvedByAdmin = isResolvedByAdmin;
     }
 }

@@ -16,8 +16,14 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
     Optional<List<Report>> findAllByCategory(@NotBlank String category);
 
-    Optional<List<Report>> findAllByProceededDateBeforeAndProceededDateAfter(
+    Optional<List<Report>> findAllByFailureDateAfterAndFailureDateBefore(
         @NotNull OffsetDateTime startWindow,
         @NotNull OffsetDateTime endWindow
     );
+
+    Optional<List<Report>> findAllByFailureDateAfter(@NotNull OffsetDateTime startWindow);
+
+    Optional<List<Report>> findAllByFailureDateBefore(@NotNull OffsetDateTime endWindow);
+
+    Optional<List<Report>> findAllByOwnerEmail(@NotBlank String email);
 }

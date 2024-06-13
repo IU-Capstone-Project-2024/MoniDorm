@@ -6,6 +6,7 @@ import com.java.api.model.PostProcessReportResponse;
 import com.java.domain.model.Report;
 import com.java.domain.repository.ReportRepository;
 import com.java.domain.service.ReportService;
+import jakarta.annotation.Nullable;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -37,14 +38,37 @@ public class JpaReportService implements ReportService {
     }
 
     @Override
-    public Optional<List<Report>> getAllReportsByDateWindows(OffsetDateTime startWindow, OffsetDateTime endWindow) {
-        return reportRepository.findAllByProceededDateBeforeAndProceededDateAfter(startWindow, endWindow);
+    public Optional<List<Report>> getAllReportsByDateWindows(
+        @Nullable OffsetDateTime startWindow,
+        @Nullable OffsetDateTime endWindow
+    ) {
+        if (startWindow == null && endWindow == null) {
+            return Optional.of(reportRepository.findAll());
+        }
+
+        if (startWindow != null && endWindow != null) {
+            return reportRepository.findAllByFailureDateAfterAndFailureDateBefore(startWindow, endWindow);
+        }
+
+        if (startWindow != null) {
+            return reportRepository.findAllByFailureDateAfter(startWindow);
+        }
+
+        return reportRepository.findAllByFailureDateBefore(endWindow);
+
+    }
+
+    @Override
+    public Optional<List<Report>> getAllReportsByOwnerEmail(String ownerEmail) {
+        return reportRepository.findAllByOwnerEmail(ownerEmail);
     }
 
     @Override
     public Optional<PostProcessReportResponse> processReport(PostProcessReportRequest request) {
         var entity = reportRepository.save(new Report(
-            request.category(), request.placement(), request.dateTime(), OffsetDateTime.now(), false, false
+            request.category(), request.placement(), request.dateTime(),
+            request.ownerEmail(), OffsetDateTime.now(), false,
+            false, false, false
         ));
 
         return Optional.of(new PostProcessReportResponse(
@@ -53,9 +77,36 @@ public class JpaReportService implements ReportService {
     }
 
     @Override
-    public boolean confirmReport(long id) {
+    public boolean confirmReportByAnalysis(long id) {
         var entity = reportRepository.findById(id).orElseThrow(() -> new NotFoundException(EXCEPTION_MESSAGE));
-        entity.setResolved(true);
+        entity.setConfirmedByAnalysis(true);
+        reportRepository.flush();
+
+        return true;
+    }
+
+    @Override
+    public boolean confirmReportByAdmin(long id) {
+        var entity = reportRepository.findById(id).orElseThrow(() -> new NotFoundException(EXCEPTION_MESSAGE));
+        entity.setConfirmedByAdmin(true);
+        reportRepository.flush();
+
+        return true;
+    }
+
+    @Override
+    public boolean resolveReportByUser(long id) {
+        var entity = reportRepository.findById(id).orElseThrow(() -> new NotFoundException(EXCEPTION_MESSAGE));
+        entity.setResolvedByUser(true);
+        reportRepository.flush();
+
+        return true;
+    }
+
+    @Override
+    public boolean resolveReportByAdmin(long id) {
+        var entity = reportRepository.findById(id).orElseThrow(() -> new NotFoundException(EXCEPTION_MESSAGE));
+        entity.setResolvedByAdmin(true);
         reportRepository.flush();
 
         return true;
@@ -64,7 +115,9 @@ public class JpaReportService implements ReportService {
     @Override
     public Optional<PostProcessReportResponse> processReportForcefully(PostProcessReportRequest request) {
         var entity = reportRepository.save(new Report(
-            request.category(), request.placement(), request.dateTime(), OffsetDateTime.now(), true, false
+            request.category(), request.placement(), request.dateTime(),
+            request.ownerEmail(), OffsetDateTime.now(), false,
+            true, false, false
         ));
 
         return Optional.of(new PostProcessReportResponse(

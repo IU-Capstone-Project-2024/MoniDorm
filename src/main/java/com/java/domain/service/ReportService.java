@@ -23,9 +23,17 @@ public interface ReportService {
 
     @NotNull Optional<List<Report>> getAllReportsByDateWindows(OffsetDateTime startWindow, OffsetDateTime endWindow);
 
+    @NotNull Optional<List<Report>> getAllReportsByOwnerEmail(@NotBlank String ownerEmail);
+
     @NotNull Optional<PostProcessReportResponse> processReport(@NotNull PostProcessReportRequest request);
 
-    boolean confirmReport(@Min(0) long id);
+    boolean confirmReportByAnalysis(@Min(0) long id);
+
+    boolean confirmReportByAdmin(@Min(0) long id);
+
+    boolean resolveReportByUser(@Min(0) long id);
+
+    boolean resolveReportByAdmin(@Min(0) long id);
 
     @NotNull Optional<PostProcessReportResponse> processReportForcefully(@NotNull PostProcessReportRequest request);
 
