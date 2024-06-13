@@ -148,13 +148,13 @@ public class JpaReportServiceTest extends IntegrationEnvironment {
         boolean resolvedBefore = entity.isResolvedByAdmin();
         boolean confirmedBefore = entity.isConfirmedByAdmin();
 
-        boolean isUpdatedResolveField = reportService.resolveReportByUser(REPORT_ID_2);
-        boolean isUpdatedConfirmedBefore = reportService.confirmReportByAnalysis(REPORT_ID_2);
+        boolean isUpdatedResolveField = reportService.resolveReportByAdmin(REPORT_ID_2);
+        boolean isUpdatedConfirmedBefore = reportService.confirmReportByAdmin(REPORT_ID_2);
         var updatedEntity = reportService.getReportById(REPORT_ID_2).orElseThrow();
 
         assertThat(isUpdatedResolveField && isUpdatedConfirmedBefore).isTrue();
-        assertThat(updatedEntity.isResolvedByUser()).isNotEqualTo(resolvedBefore);
-        assertThat(updatedEntity.isConfirmedByAnalysis()).isEqualTo(confirmedBefore);
+        assertThat(updatedEntity.isResolvedByAdmin()).isNotEqualTo(resolvedBefore);
+        assertThat(updatedEntity.isConfirmedByAdmin()).isEqualTo(confirmedBefore);
     }
 
     @Test
