@@ -40,7 +40,17 @@ public class ReportController implements ReportAPI {
     }
 
     @Override
+    public ResponseEntity<GetReportListResponse> getReportsByEmail(String ownerEmail) {
+        return null;
+    }
+
+    @Override
     public ResponseEntity<PostProcessReportResponse> processReport(PostProcessReportRequest request) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> resolveReport(long reportId) {
         return null;
     }
 }

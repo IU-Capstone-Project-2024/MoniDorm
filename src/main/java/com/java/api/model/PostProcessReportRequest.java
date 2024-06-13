@@ -10,6 +10,8 @@ import java.time.OffsetDateTime;
 public record PostProcessReportRequest(
     @NotBlank String category,
     @NotBlank String placement,
-    @NotNull OffsetDateTime dateTime
+    @NotNull OffsetDateTime dateTime,
+    String ownerEmail,
+    String description
 ) {
 }

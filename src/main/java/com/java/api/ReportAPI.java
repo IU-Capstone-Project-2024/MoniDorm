@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,7 +73,7 @@ public interface ReportAPI {
     )
     ResponseEntity<GetReportListResponse> getAllReports();
 
-    @Operation(summary = "Get all the reports by the date window")
+    @Operation(summary = "Get all the reports by the date window (exclusive)")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200",
                      description = "Reports successfully returned",
@@ -135,11 +136,34 @@ public interface ReportAPI {
                      description = "Incorrect access token provided",
                      content = @Content())
     })
+
     @GetMapping(
         path = "/allByCategory",
         headers = "Authorization"
     )
-    ResponseEntity<GetReportListResponse> getReportsByCategory(@RequestBody @NotBlank String category);
+    ResponseEntity<GetReportListResponse> getReportsByCategory(@RequestParam @NotBlank String category);
+
+    @Operation(summary = "Get all the reports by the owner email")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+                     description = "Reports successfully returned",
+                     content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                        schema = @Schema(implementation = GetReportListResponse.class))
+        ),
+
+        @ApiResponse(responseCode = "400",
+                     description = "Request was malformed",
+                     content = @Content()),
+
+        @ApiResponse(responseCode = "403",
+                     description = "Incorrect access token provided",
+                     content = @Content())
+    })
+    @GetMapping(
+        path = "/allByEmail",
+        headers = "Authorization"
+    )
+    ResponseEntity<GetReportListResponse> getReportsByEmail(@RequestParam @NotBlank String ownerEmail);
 
     @Operation(summary = "Process report from the user")
     @ApiResponses(value = {
@@ -162,4 +186,29 @@ public interface ReportAPI {
         headers = "Authorization"
     )
     ResponseEntity<PostProcessReportResponse> processReport(@RequestBody @NotNull PostProcessReportRequest request);
+
+    @Operation(summary = "Resolve report from the user")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+                     description = "Report resolved successfully",
+                     content = @Content()
+        ),
+
+        @ApiResponse(responseCode = "400",
+                     description = "Request was malformed",
+                     content = @Content()),
+
+        @ApiResponse(responseCode = "403",
+                     description = "Incorrect access token provided",
+                     content = @Content()),
+
+        @ApiResponse(responseCode = "404",
+                     description = "The entity is not found",
+                     content = @Content())
+    })
+    @PatchMapping(
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        headers = "Authorization"
+    )
+    ResponseEntity<Void> resolveReport(@RequestParam(value = "report_id") @Min(0) long reportId);
 }

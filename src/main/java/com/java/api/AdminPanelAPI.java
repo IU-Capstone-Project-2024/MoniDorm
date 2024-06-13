@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,56 @@ public interface AdminPanelAPI {
     @GetMapping(
         headers = "Authorization"
     )
-    ResponseEntity<Object> confirmReport(@RequestParam(value = "report_id") long reportId);
+    ResponseEntity<Void> confirmReport(@RequestParam(value = "report_id") long reportId);
+
+    @Operation(summary = "Resolve report with certain id")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+                     description = "Report successfully resolved",
+                     content = @Content()
+        ),
+
+        @ApiResponse(responseCode = "400",
+                     description = "Request was malformed",
+                     content = @Content()),
+
+        @ApiResponse(responseCode = "403",
+                     description = "Incorrect access token provided",
+                     content = @Content()),
+
+        @ApiResponse(responseCode = "404",
+                     description = "The entity is not found",
+                     content = @Content())
+    })
+    @GetMapping(
+        path = "/resolve",
+        headers = "Authorization"
+    )
+    ResponseEntity<Void> resolveReportForcefully(@RequestParam(value = "report_id") long reportId);
+
+    @Operation(summary = "Resolve report with certain id")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+                     description = "Report successfully resolved",
+                     content = @Content()
+        ),
+
+        @ApiResponse(responseCode = "400",
+                     description = "Request was malformed",
+                     content = @Content()),
+
+        @ApiResponse(responseCode = "403",
+                     description = "Incorrect access token provided",
+                     content = @Content())
+    })
+    @GetMapping(
+        path = "/resolveByMeta",
+        headers = "Authorization"
+    )
+    ResponseEntity<Void> resolveReportForcefullyByMeta(
+        @RequestParam @NotBlank String placement,
+        @RequestParam @NotBlank String category
+    );
 
     @Operation(summary = "Create confirmed report instantly")
     @ApiResponses(value = {
@@ -89,5 +139,5 @@ public interface AdminPanelAPI {
     @DeleteMapping(
         headers = "Authorization"
     )
-    ResponseEntity<Object> deleteReport(@RequestParam(value = "report_id") long reportId);
+    ResponseEntity<Void> deleteReport(@RequestParam(value = "report_id") long reportId);
 }

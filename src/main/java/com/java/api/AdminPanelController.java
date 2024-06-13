@@ -11,8 +11,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Log4j2
 public class AdminPanelController implements AdminPanelAPI {
+
     @Override
-    public ResponseEntity<Object> confirmReport(long reportId) {
+    public ResponseEntity<Void> confirmReport(long reportId) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> resolveReportForcefully(long reportId) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Void> resolveReportForcefullyByMeta(String placement, String category) {
         return null;
     }
 
@@ -22,7 +33,7 @@ public class AdminPanelController implements AdminPanelAPI {
     }
 
     @Override
-    public ResponseEntity<Object> deleteReport(long reportId) {
+    public ResponseEntity<Void> deleteReport(long reportId) {
         return null;
     }
 }
