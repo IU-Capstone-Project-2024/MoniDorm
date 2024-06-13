@@ -15,7 +15,7 @@ public class DateTimeConverterTest {
             25, 0, 0, ZoneOffset.ofHours(3)
         );
 
-        assertThat(odt.getHour()).isEqualTo(CONVERTER.convertToDatabaseColumn(odt).toInstant()
+        assertThat(odt.getHour()).isEqualTo(CONVERTER.convertToDatabaseColumn(odt).toLocalDateTime()
             .atOffset(ZoneOffset.ofHours(3)).getHour());
     }
 
