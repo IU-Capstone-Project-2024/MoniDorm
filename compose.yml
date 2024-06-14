@@ -25,6 +25,20 @@ services:
       - ./db/migrations:/liquibase/changelog
     networks:
       - backend
+  monidorm:
+    build:
+      context: .
+      pull: false
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    networks:
+      - backend
+    env_file:
+      - ./.env
+    depends_on:
+      - postgresql
+      - liquibase
 
 volumes:
   postgresql: { }

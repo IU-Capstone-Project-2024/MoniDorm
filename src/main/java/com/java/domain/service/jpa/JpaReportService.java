@@ -68,7 +68,8 @@ public class JpaReportService implements ReportService {
         var entity = reportRepository.save(new Report(
             request.category(), request.placement(), request.dateTime(),
             request.ownerEmail(), OffsetDateTime.now(), false,
-            false, false, false
+            false, false, false,
+            request.description()
         ));
 
         return Optional.of(new PostProcessReportResponse(
@@ -117,7 +118,8 @@ public class JpaReportService implements ReportService {
         var entity = reportRepository.save(new Report(
             request.category(), request.placement(), request.dateTime(),
             request.ownerEmail(), OffsetDateTime.now(), false,
-            true, false, false
+            true, false, false,
+            request.description()
         ));
 
         return Optional.of(new PostProcessReportResponse(

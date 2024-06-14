@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.MediaType;
@@ -42,7 +43,7 @@ public interface AdminPanelAPI {
                      content = @Content())
     })
     @GetMapping(
-        headers = "Authorization"
+        headers = "Token"
     )
     ResponseEntity<Void> confirmReport(@RequestParam(value = "report_id") long reportId);
 
@@ -67,7 +68,7 @@ public interface AdminPanelAPI {
     })
     @GetMapping(
         path = "/resolve",
-        headers = "Authorization"
+        headers = "Token"
     )
     ResponseEntity<Void> resolveReportForcefully(@RequestParam(value = "report_id") long reportId);
 
@@ -88,7 +89,7 @@ public interface AdminPanelAPI {
     })
     @GetMapping(
         path = "/resolveByMeta",
-        headers = "Authorization"
+        headers = "Token"
     )
     ResponseEntity<Void> resolveReportForcefullyByMeta(
         @RequestParam @NotBlank String placement,
@@ -113,9 +114,11 @@ public interface AdminPanelAPI {
     })
     @PostMapping(
         consumes = MediaType.APPLICATION_JSON_VALUE,
-        headers = "Authorization"
+        headers = "Token"
     )
-    ResponseEntity<PostProcessReportResponse> createReport(@RequestBody @NotNull PostProcessReportRequest request);
+    ResponseEntity<PostProcessReportResponse> createReport(
+        @RequestBody @NotNull @Valid PostProcessReportRequest request
+    );
 
     @Operation(summary = "Delete report with certain id")
     @ApiResponses(value = {
@@ -137,7 +140,7 @@ public interface AdminPanelAPI {
                      content = @Content())
     })
     @DeleteMapping(
-        headers = "Authorization"
+        headers = "Token"
     )
     ResponseEntity<Void> deleteReport(@RequestParam(value = "report_id") long reportId);
 }

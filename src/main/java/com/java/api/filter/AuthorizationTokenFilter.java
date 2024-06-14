@@ -13,10 +13,10 @@ import jakarta.validation.constraints.NotNull;
 import java.io.IOException;
 import org.springframework.http.HttpStatus;
 
-public class AuthorizationFilter implements Filter {
+public class AuthorizationTokenFilter implements Filter {
     private final String apiToken;
 
-    public AuthorizationFilter(@NotNull ApplicationConfiguration configuration) {
+    public AuthorizationTokenFilter(@NotNull ApplicationConfiguration configuration) {
         this.apiToken = configuration.apiToken();
     }
 
@@ -26,7 +26,7 @@ public class AuthorizationFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        var token = request.getHeader("Authorization");
+        var token = request.getHeader("Token");
 
         try {
             if (token == null || !token.equals(apiToken)) {

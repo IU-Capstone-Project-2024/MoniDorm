@@ -2,6 +2,7 @@ package com.java.api.model;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.java.domain.model.Report;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,4 +20,13 @@ public record GetReportResponse(
     boolean isConfirmed,
     String description
 ) {
+    public GetReportResponse(@NotNull Report report) {
+        this(
+            report.getId(), report.getCategory(), report.getPlacement(),
+            report.getOwnerEmail(), report.getFailureDate(), report.getProceededDate(),
+            report.isResolvedByUser() || report.isResolvedByAdmin(),
+            report.isConfirmedByAnalysis() || report.isConfirmedByAdmin(),
+            report.description
+        );
+    }
 }
