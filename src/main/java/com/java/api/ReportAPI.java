@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -47,7 +48,7 @@ public interface ReportAPI {
                      content = @Content())
     })
     @GetMapping(
-        headers = "Authorization"
+        headers = "Token"
     )
     ResponseEntity<GetReportResponse> getReport(@RequestParam(value = "report_id") @Min(0) long reportId);
 
@@ -69,7 +70,7 @@ public interface ReportAPI {
     })
     @GetMapping(
         path = "/all",
-        headers = "Authorization"
+        headers = "Token"
     )
     ResponseEntity<GetReportListResponse> getAllReports();
 
@@ -92,10 +93,10 @@ public interface ReportAPI {
     @PostMapping(
         path = "/allByDates",
         consumes = MediaType.APPLICATION_JSON_VALUE,
-        headers = "Authorization"
+        headers = "Token"
     )
     ResponseEntity<GetReportListResponse> getReportsByDateWindow(
-        @RequestBody @NotNull PostFetchReportsByDateRequest request
+        @RequestBody @NotNull @Valid PostFetchReportsByDateRequest request
     );
 
     @Operation(summary = "Get all the reports by the placement")
@@ -116,7 +117,7 @@ public interface ReportAPI {
     })
     @GetMapping(
         path = "/allByPlacement",
-        headers = "Authorization"
+        headers = "Token"
     )
     ResponseEntity<GetReportListResponse> getReportsByPlacement(@RequestParam @NotBlank String placement);
 
@@ -139,7 +140,7 @@ public interface ReportAPI {
 
     @GetMapping(
         path = "/allByCategory",
-        headers = "Authorization"
+        headers = "Token"
     )
     ResponseEntity<GetReportListResponse> getReportsByCategory(@RequestParam @NotBlank String category);
 
@@ -161,7 +162,7 @@ public interface ReportAPI {
     })
     @GetMapping(
         path = "/allByEmail",
-        headers = "Authorization"
+        headers = "Token"
     )
     ResponseEntity<GetReportListResponse> getReportsByEmail(@RequestParam @NotBlank String ownerEmail);
 
@@ -183,9 +184,11 @@ public interface ReportAPI {
     })
     @PostMapping(
         consumes = MediaType.APPLICATION_JSON_VALUE,
-        headers = "Authorization"
+        headers = "Token"
     )
-    ResponseEntity<PostProcessReportResponse> processReport(@RequestBody @NotNull PostProcessReportRequest request);
+    ResponseEntity<PostProcessReportResponse> processReport(
+        @RequestBody @NotNull @Valid PostProcessReportRequest request
+    );
 
     @Operation(summary = "Resolve report from the user")
     @ApiResponses(value = {
@@ -207,8 +210,7 @@ public interface ReportAPI {
                      content = @Content())
     })
     @PatchMapping(
-        consumes = MediaType.APPLICATION_JSON_VALUE,
-        headers = "Authorization"
+        headers = "Token"
     )
     ResponseEntity<Void> resolveReport(@RequestParam(value = "report_id") @Min(0) long reportId);
 }

@@ -20,8 +20,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthorizationFilterTest {
-    private static final String HEADER_NAME = "Authorization";
+public class AuthorizationTokenFilterTest {
+    private static final String HEADER_NAME = "Token";
     private static final String API_TOKEN = "TOKEN";
     private static ServletRequest request;
     private static ServletResponse response;
@@ -33,7 +33,7 @@ public class AuthorizationFilterTest {
         ApplicationConfiguration configuration = Mockito.mock(ApplicationConfiguration.class);
         Mockito.when(configuration.apiToken()).thenReturn(API_TOKEN);
 
-        authorizationFilter = new AuthorizationFilter(configuration);
+        authorizationFilter = new AuthorizationTokenFilter(configuration);
 
         request = Mockito.mock(ServletRequest.class, Mockito.withSettings().extraInterfaces(HttpServletRequest.class));
         response =

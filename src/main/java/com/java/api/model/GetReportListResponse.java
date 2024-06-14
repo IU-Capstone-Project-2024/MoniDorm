@@ -11,4 +11,7 @@ public record GetReportListResponse(
     @NotNull List<GetReportResponse> responses,
     @Min(0) long size
 ) {
+    public GetReportListResponse(List<GetReportResponse> responses) {
+        this(responses, responses.size());
+    }
 }

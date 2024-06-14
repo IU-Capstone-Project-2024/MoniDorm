@@ -52,6 +52,8 @@ public class Report {
     @Column(nullable = false)
     private boolean isResolvedByAdmin;
 
+    public String description;
+
     @SuppressWarnings("checkstyle:ParameterNumber") public Report(
         String category,
         String placement,
@@ -61,7 +63,8 @@ public class Report {
         boolean isConfirmedByAnalysis,
         boolean isConfirmedByAdmin,
         boolean isResolvedByUser,
-        boolean isResolvedByAdmin
+        boolean isResolvedByAdmin,
+        String description
     ) {
         this.category = category;
         this.placement = placement;
@@ -72,5 +75,6 @@ public class Report {
         this.isConfirmedByAdmin = isConfirmedByAdmin;
         this.isResolvedByUser = isResolvedByUser;
         this.isResolvedByAdmin = isResolvedByAdmin;
+        this.description = description;
     }
 }

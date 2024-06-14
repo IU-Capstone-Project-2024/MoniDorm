@@ -4,6 +4,17 @@ app:
 spring:
   application:
     name: monidorm-server
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: "jdbc:postgresql://host.docker.internal:5432/${POSTGRES_DB}"
+    username: "${POSTGRES_USER}"
+    password: "${POSTGRES_PASSWORD}"
+  jpa:
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+      ddl-auto: validate
+    show-sql: false
 
 springdoc:
   swagger-ui:
@@ -15,32 +26,32 @@ server:
 logging:
   config: classpath:log4j2-plain.xml
 
-#management:
-#  server:
-#    port: 8081
-#
-#  metrics:
-#    tags:
-#      application: ${spring.application.name}
-#    distribution:
-#      percentiles-histogram:
-#        "[http.server.requests]": true
-#
-#  endpoint:
-#    health:
-#      enabled: true
-#    prometheus:
-#      enabled: true
-#
-#  endpoints:
-#    web:
-#      base-path: "/"
-#      exposure:
-#        include: "health,prometheus"
-#      path-mapping:
-#        "prometheus": "/metrics"
-#
-#  prometheus:
-#    metrics:
-#      export:
-#        enabled: true
+management:
+  server:
+    port: 8081
+
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
+
+  endpoint:
+    health:
+      enabled: true
+    prometheus:
+      enabled: true
+
+  endpoints:
+    web:
+      base-path: "/"
+      exposure:
+        include: "health,prometheus"
+      path-mapping:
+        "prometheus": "/metrics"
+
+  prometheus:
+    metrics:
+      export:
+        enabled: true
