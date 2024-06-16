@@ -13,3 +13,5 @@ class DialogStates(StatesGroup):
     Authorized = State()
     # Reporting state
     Reporting = State()
+    # Awaiting report comment state
+    ReportCommentAwaiting = State()
