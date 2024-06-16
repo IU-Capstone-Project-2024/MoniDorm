@@ -24,7 +24,7 @@ class Client:
 
     def send_authentication_code(self, receptionist, code: str):
         msg = MIMEMultipart()
-        msg['From'] = self.__user
+        msg['From'] = "Monidorm authentication service"
         msg['To'] = receptionist
         msg['Subject'] = "Monidorm bot authentication code"
 

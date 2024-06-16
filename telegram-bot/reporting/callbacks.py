@@ -71,5 +71,3 @@ class ReportCallbackProvider:
 
     def get_callback(self, callback_id):
         return self.__actions[callback_id]
-
-

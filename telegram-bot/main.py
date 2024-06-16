@@ -1,15 +1,23 @@
+"""
+Entrypoint for Telegram bot application
+"""
+
+from os import getenv
 import asyncio
-from aiogram import Bot, Dispatcher
-from handling.handlers import router
 
 from dotenv import load_dotenv
-from os import getenv
+from aiogram import Bot, Dispatcher
 
+from handling.handlers import router
 from reporting.callbacks import ReportCallbackProvider
 from mail.client import Client
 
 
 async def main():
+    """
+    Setting up a Telegram bot with its environment
+    :return:
+    """
     bot = Bot(token=getenv("BOT_TOKEN"))
     dp = Dispatcher()
 
