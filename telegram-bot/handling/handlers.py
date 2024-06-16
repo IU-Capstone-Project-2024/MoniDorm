@@ -1,5 +1,8 @@
+import datetime
+import os
 import random
 import re
+from os import getenv
 
 from aiogram.filters import Command, StateFilter
 from aiogram import Router, types
@@ -33,14 +36,16 @@ async def auth_email_process(msg: Message, state: FSMContext, mail_client: Clien
         mail_client.send_authentication_code(user_email, code)
         await state.update_data({
             "email": user_email,
-            "expected_code": code
+            "expected_code": code,
+            "code_expiration": datetime.datetime.now() +
+                               datetime.timedelta(minutes=float(os.getenv("EMAIL_CODE_EXPIRATION_MINS")))
         })
         await state.set_state(DialogStates.AuthorizationConfirmationAwaiting)
-        await msg.answer(f'Confirmation code was sent to {user_email}. '
+        await msg.answer(f'Confirmation code was sent to `{user_email}`. '
                          f'In order to finish authorization, send it here.'
                          f'\n\nIf you figured out that email address contains mistake, '
                          f'press the button below.',
-                         reply_markup=all_callbacks.get_email_kb())
+                         reply_markup=all_callbacks.get_email_kb(), parse_mode="Markdown")
 
     else:
         await msg.answer('Sorry, seems like it is not a correct Innopolis University '
@@ -56,9 +61,26 @@ async def auth_email_revert(callback: types.CallbackQuery, state: FSMContext):
 
 
 @router.message(StateFilter(DialogStates.AuthorizationConfirmationAwaiting))
-async def auth_code_process(message: Message, state: FSMContext):
+async def auth_code_process(message: Message, state: FSMContext, mail_client: Client):
     expected_code = (await state.get_data())["expected_code"]
-    if expected_code == message.text:
+    expiration_time = (await state.get_data())["code_expiration"]
+    user_email = (await state.get_data())["email"]
+
+    if datetime.datetime.now() > expiration_time:
+        code = str(random.randint(100000, 999999))
+        await state.update_data(
+            code_expiration=datetime.datetime.now() +
+                            datetime.timedelta(minutes=float(getenv("EMAIL_CODE_EXPIRATION_MINS"))),
+            expected_code=code
+        )
+        mail_client.send_authentication_code(user_email, code)
+        await message.answer(
+            f"Your authorization code has expired\n\n"
+            f"New one was sent to previously `{user_email}`",
+            reply_markup=all_callbacks.get_email_kb(),
+            parse_mode="Markdown"
+        )
+    elif expected_code == message.text:
         await state.set_state(DialogStates.Authorized)
         await state.update_data(expected_code="")
         await message.answer("You are authorized now! Enjoy the usage of monidorm!")
