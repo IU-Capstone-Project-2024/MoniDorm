@@ -32,8 +32,8 @@ async def auth_email_process(msg: Message, state: FSMContext, mail_client: Clien
         code = str(random.randint(100000, 999999))
         mail_client.send_authentication_code(user_email, code)
         await state.update_data({
-            "user_email": user_email,
-            "code": code
+            "email": user_email,
+            "expected_code": code
         })
         await state.set_state(DialogStates.AuthorizationConfirmationAwaiting)
         await msg.answer(f'Confirmation code was sent to {user_email}. '
@@ -57,10 +57,10 @@ async def auth_email_revert(callback: types.CallbackQuery, state: FSMContext):
 
 @router.message(StateFilter(DialogStates.AuthorizationConfirmationAwaiting))
 async def auth_code_process(message: Message, state: FSMContext):
-    expected_code = (await state.get_data())["code"]
+    expected_code = (await state.get_data())["expected_code"]
     if expected_code == message.text:
         await state.set_state(DialogStates.Authorized)
-        await state.set_data({})
+        await state.update_data(expected_code="")
         await message.answer("You are authorized now! Enjoy the usage of monidorm!")
     else:
         await message.answer("The code seems to be incorrect. Please, try again or reset the email.")
@@ -90,7 +90,7 @@ async def report_processing(
         await state.set_state(DialogStates.Authorized)
         await query.message.delete()
     elif callback_properties['action'] == 'report':
-        print(callback_properties['meta'])
+        print(callback_properties['meta'], (await state.get_data())['email'])
         await state.set_state(DialogStates.Authorized)
         await query.message.edit_text('Report is sent. Thank you for assistance!')
     else:
@@ -101,4 +101,3 @@ async def report_processing(
 async def user_logout_init(msg: Message, state: FSMContext):
     await msg.answer('See you! Logging out...')
     await state.clear()
-    # TODO: delete entry from database

@@ -7,6 +7,8 @@ import asyncio
 
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
+from aiogram.fsm.storage.mongo import MongoStorage
+from motor.motor_asyncio import AsyncIOMotorClient
 
 from handling.handlers import router
 from reporting.callbacks import ReportCallbackProvider
@@ -18,8 +20,10 @@ async def main():
     Setting up a Telegram bot with its environment
     :return:
     """
+    mongo = MongoStorage(AsyncIOMotorClient(getenv("BOT_STORAGE_MONGO_URI")))
+
     bot = Bot(token=getenv("BOT_TOKEN"))
-    dp = Dispatcher()
+    dp = Dispatcher(storage=mongo)
 
     dp.include_routers(router)
 
