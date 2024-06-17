@@ -32,10 +32,8 @@ class ReportCallbackProvider:
             if node["type"] == "failure":
                 self.__actions[node_id] = {
                     "action": "report",
-                    "meta": {
-                        "categories": categories,
-                        "failure_id": node["id"]
-                    }
+                    "placement": categories,
+                    "category": node['id']
                 }
                 return node_id
 

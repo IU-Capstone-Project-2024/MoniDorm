@@ -10,6 +10,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.mongo import MongoStorage
 from motor.motor_asyncio import AsyncIOMotorClient
 
+from reporting.reporter import Reporter
 from handling.handlers import router
 from reporting.callbacks import ReportCallbackProvider
 from mail.client import Client
@@ -39,10 +40,13 @@ async def main():
         message_template="confirmation-email-template.html.j2"
     )
 
+    reporter = Reporter(getenv('API_URL'), getenv('API_TOKEN'))
+
     await dp.start_polling(
         bot,
         report_provider=report_callback_provider,
-        mail_client=mail_client
+        mail_client=mail_client,
+        reporter=reporter
     )
 
 

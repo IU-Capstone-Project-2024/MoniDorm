@@ -16,6 +16,8 @@ from handling.dialog import DialogStates
 from reporting.callbacks import ReportCallbackProvider
 from mail.client import Client
 
+from reporting.reporter import Report, Reporter, ReportBuilder
+
 router = Router()
 
 
@@ -113,8 +115,8 @@ async def report_processing(
         await query.message.delete()
     elif callback_properties['action'] == 'report':
         await state.update_data(report={
-            "categories": callback_properties['meta'],
-            "description": None
+            'placement': callback_properties['placement'],
+            'category': callback_properties['category']
         })
         # TODO: Question - is it better to send report+comment together, or perform update with comment?
         await state.set_state(DialogStates.ReportCommentAwaiting)
@@ -136,22 +138,38 @@ async def user_logout_init(msg: Message, state: FSMContext):
 
 @router.callback_query(StateFilter(DialogStates.ReportCommentAwaiting),
                        all_callbacks.DetailedReportCallback.filter())
-async def send_report_no_comment(query: CallbackQuery, state: FSMContext):
+async def send_report_no_comment(query: CallbackQuery, state: FSMContext, reporter: Reporter):
     # TODO: send report to API
-    print((await state.get_data())["report"])
+    user_data = await state.get_data()
+    user_report = (ReportBuilder()
+                   .add_category(user_data['report']['category'])
+                   .add_placement(user_data['report']['placement'])
+                   .add_email(user_data['email'])
+                   .stamp_datetime()
+                   ).build()
+    reporter.report(user_report)
+
     await query.message.edit_text('Report is sent. Thank you!')
     await state.set_state(DialogStates.Authorized)
 
 
 @router.message(StateFilter(DialogStates.ReportCommentAwaiting))
-async def extend_report_with_comment(msg: Message, state: FSMContext):
+async def extend_report_with_comment(msg: Message, state: FSMContext, reporter: Reporter):
     description = msg.text
-    report = (await state.get_data())["report"]
+    user_data = await state.get_data()
+    report = user_data["report"]
     report["description"] = description
+
     await state.update_data(report=report)
 
-    # TODO: send a report
-    print(report)
+    user_report = (ReportBuilder()
+                   .add_category(report['category'])
+                   .add_placement(report['placement'])
+                   .add_email(user_data['email'])
+                   .stamp_datetime()
+                   .add_description(report['description'])
+                   ).build()
+    reporter.report(user_report)
 
     await msg.answer('Report is sent! Thank you for detailed failure description!')
     await state.set_state(DialogStates.Authorized)
