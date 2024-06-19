@@ -4,19 +4,17 @@ import random
 import re
 from os import getenv
 
-from aiogram.filters import Command, StateFilter
 from aiogram import Router, types
+from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 
 import handling.callbacks as all_callbacks
 import reporting.callbacks as report_callbacks
-
 from handling.dialog import DialogStates
-from reporting.callbacks import ReportCallbackProvider
 from mail.client import Client
-
-from reporting.reporter import Report, Reporter, ReportBuilder
+from reporting.callbacks import *
+from reporting.reporter import Reporter, ReportBuilder
 
 router = Router()
 
@@ -96,27 +94,39 @@ async def failure_report_init(
         report_provider: ReportCallbackProvider,
         state: FSMContext
 ):
-    keyboard = report_provider.get_callback(1)
+    initial_transition = report_provider.get_callback(1)
     await state.set_state(DialogStates.Reporting)
-    await msg.answer('Report a failure!', reply_markup=keyboard['keyboard'])
+    await msg.answer('Report a failure!', reply_markup=initial_transition.keyboard())
 
 
-@router.callback_query(StateFilter(DialogStates.Reporting), report_callbacks.ReportCallback.filter())
+@router.message(
+    StateFilter(
+        DialogStates.Authorized,
+        DialogStates.Reporting,
+        DialogStates.ReportCommentAwaiting
+    ), Command("menu")
+)
+async def interrupt_and_go_to_menu(msg: Message, state: FSMContext):
+    await state.set_state(DialogStates.Authorized)
+    await msg.answer('Everything is interrupted, you are at the main menu now.')
+
+
+@router.callback_query(StateFilter(DialogStates.Reporting), report_callbacks.ReportingKbCallback.filter())
 async def report_processing(
         query: CallbackQuery,
-        callback_data: report_callbacks.ReportCallback,
+        callback_data: report_callbacks.ReportingKbCallback,
         state: FSMContext,
         report_provider: ReportCallbackProvider
 ):
     go_to = callback_data.window_id
-    callback_properties = report_provider.get_callback(go_to)
-    if callback_properties['action'] == 'cancel':
+    callback = report_provider.get_callback(go_to)
+    if isinstance(callback, CancelCallback):
         await state.set_state(DialogStates.Authorized)
         await query.message.delete()
-    elif callback_properties['action'] == 'report':
+    elif isinstance(callback, CategoryCallback):
         await state.update_data(report={
-            'placement': callback_properties['placement'],
-            'category': callback_properties['category']
+            'placement': callback.placements(),
+            'category': callback.category()
         })
         # TODO: Question - is it better to send report+comment together, or perform update with comment?
         await state.set_state(DialogStates.ReportCommentAwaiting)
@@ -126,8 +136,8 @@ async def report_processing(
             'please, send a message with them, otherwise press the button below',
             reply_markup=all_callbacks.get_detailed_report_kb()
         )
-    else:
-        await query.message.edit_reply_markup(reply_markup=report_provider.get_callback(go_to)['keyboard'])
+    elif isinstance(callback, TransitionCallback):
+        await query.message.edit_reply_markup(reply_markup=callback.keyboard())
 
 
 @router.message(StateFilter(DialogStates.Authorized), Command("logout"))

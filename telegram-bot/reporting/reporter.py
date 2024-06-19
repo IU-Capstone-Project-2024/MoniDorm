@@ -77,8 +77,5 @@ class Reporter:
         }
 
     def report(self, report: Report):
-        print(self.__headers)
-        print(report.to_post())
-        response = requests.post(f'{self.__url}/api/report', headers=self.__headers, json=report.to_post())
-        print(response.status_code, response.json())
-        return dict(response.json())
+        print('Report processed',
+              requests.post(f'{self.__url}/api/report', headers=self.__headers, json=report.to_post()))

@@ -1,12 +1,43 @@
 import json
-
-from aiogram.filters.callback_data import CallbackData
-from aiogram.utils.keyboard import InlineKeyboardBuilder
+from abc import ABC
 from typing import List
 
+from aiogram.filters.callback_data import CallbackData
+from aiogram.types import InlineKeyboardMarkup
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-class ReportCallback(CallbackData, prefix="report"):
+
+class ReportingKbCallback(CallbackData, prefix="report"):
     window_id: int
+
+
+class ReportCallback(ABC):
+    pass
+
+
+class CategoryCallback(ReportCallback):
+    def __init__(self, placements: List[str], category: str):
+        self.__placements = placements
+        self.__category = category
+
+    def placements(self) -> List[str]:
+        return self.__placements
+
+    def category(self) -> str:
+        return self.__category
+
+
+class TransitionCallback(ReportCallback):
+    def __init__(self, keyboard: InlineKeyboardMarkup):
+        self.__keyboard = keyboard
+
+    def keyboard(self) -> InlineKeyboardMarkup:
+        return self.__keyboard
+
+
+class CancelCallback(ReportCallback):
+    def __init__(self):
+        pass
 
 
 class ReportCallbackProvider:
@@ -15,10 +46,8 @@ class ReportCallbackProvider:
             schemas = json.load(f)
 
         window_id = 1
-        self.__actions = {
-            0: {
-                "action": "cancel"
-            }
+        self.__callbacks = {
+            0: CancelCallback()
         }
 
         def dfs(node: dict, parent_id: int, categories: List[str]):
@@ -30,11 +59,10 @@ class ReportCallbackProvider:
             builder = InlineKeyboardBuilder()
 
             if node["type"] == "failure":
-                self.__actions[node_id] = {
-                    "action": "report",
-                    "placement": categories,
-                    "category": node['id']
-                }
+                self.__callbacks[node_id] = CategoryCallback(
+                    categories,
+                    node['id']
+                )
                 return node_id
 
             for child in node["items"]:
@@ -45,7 +73,7 @@ class ReportCallbackProvider:
                     icon = '📁'
                 builder.button(
                     text=f'{icon} {child['name']['en']}',
-                    callback_data=ReportCallback(window_id=child_id)
+                    callback_data=ReportingKbCallback(window_id=child_id)
                 )
 
             if parent_id == 0:
@@ -54,18 +82,15 @@ class ReportCallbackProvider:
                 return_button = '👈 Back'
             builder.button(
                 text=return_button,
-                callback_data=ReportCallback(window_id=parent_id)
+                callback_data=ReportingKbCallback(window_id=parent_id)
             )
 
             builder.adjust(3)
-            self.__actions[node_id] = {
-                "action": "transfer",
-                "keyboard": builder.as_markup()
-            }
+            self.__callbacks[node_id] = TransitionCallback(builder.as_markup())
 
             return node_id
 
         dfs(schemas, 0, list())
 
     def get_callback(self, callback_id):
-        return self.__actions[callback_id]
+        return self.__callbacks[callback_id]
