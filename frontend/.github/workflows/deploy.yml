@@ -1,0 +1,32 @@
+name: Deploy to Remote Server
+
+on:
+  push:
+    branches:
+      - frontend
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Build and push Docker image
+      env:
+        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+        DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
+        
+      run: |
+        docker build -t frontend-monidorm .
+        docker tag frontend-monidorm:latest $DOCKER_HUB_USERNAME/frontend-monidorm:latest
+        docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
+        docker push $DOCKER_HUB_USERNAME/frontend-monidorm:latest
+
+    - name: Deploy to server
+      env:
+        VM_IP: ${{ secrets.VM_IP }}
+        VM_USER: ${{ secrets.VM_USER }}
+      run: |
+        ssh $VM_USER@$VM_IP 'docker pull $DOCKER_HUB_USERNAME/frontend-monidorm:latest && docker stop frontend-monidorm-container || true && docker rm frontend-monidorm-container || true && docker run -d --name frontend-monidorm-container -p 80:80 $DOCKER_HUB_USERNAME/frontend-monidorm:latest'
