@@ -30,4 +30,7 @@ jobs:
         VM_IP: ${{ secrets.VM_IP }}
         VM_USER: ${{ secrets.VM_USER }}
       run: |
-        ssh $VM_USER@$VM_IP 'docker pull $DOCKER_HUB_USERNAME/frontend-monidorm:latest && docker stop frontend-monidorm-container || true && docker rm frontend-monidorm-container || true && docker run -d --name frontend-monidorm-container -p 80:80 $DOCKER_HUB_USERNAME/frontend-monidorm:latest'
+        ssh $VM_USER@$VM_IP 'docker pull $DOCKER_HUB_USERNAME/frontend-monidorm:latest'
+        ssh $VM_USER@$VM_IP 'docker stop frontend-monidorm-container || true'
+        ssh $VM_USER@$VM_IP 'docker rm frontend-monidorm-container || true'
+        ssh $VM_USER@$VM_IP 'docker run -d --name frontend-monidorm-container -p 80:80 $DOCKER_HUB_USERNAME/frontend-monidorm:latest'
