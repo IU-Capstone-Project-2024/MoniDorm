@@ -29,6 +29,7 @@ jobs:
       env:
         VM_IP: ${{ secrets.VM_IP }}
         VM_USER: ${{ secrets.VM_USER }}
+        DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
       run: |
         ssh $VM_USER@$VM_IP 'docker pull $DOCKER_HUB_USERNAME/frontend-monidorm:latest'
         ssh $VM_USER@$VM_IP 'docker stop frontend-monidorm-container || true'
