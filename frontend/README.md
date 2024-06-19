@@ -1,3 +1,19 @@
+# Running with Docker
+
+## Build the image
+
+``` docker build -t react-app . ```
+
+## Run container
+
+``` docker run --name react-container -d -p 3000:80 react-app ```
+
+## Access with localhost
+
+``` http://localhost:3000 ```
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
