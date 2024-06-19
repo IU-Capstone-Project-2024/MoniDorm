@@ -19,6 +19,7 @@ jobs:
         DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
         
       run: |
+        cd frontend
         docker build -t frontend-monidorm .
         docker tag frontend-monidorm:latest $DOCKER_HUB_USERNAME/frontend-monidorm:latest
         docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD
