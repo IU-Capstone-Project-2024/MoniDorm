@@ -33,7 +33,6 @@ jobs:
         DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
       run: |
         ssh $VM_USER@$VM_IP
-        $VM_PASSWORD
         docker pull $DOCKER_HUB_USERNAME/frontend-monidorm:latest
         docker stop frontend-monidorm-container || true
         docker rm frontend-monidorm-container || true
