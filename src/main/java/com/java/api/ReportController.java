@@ -31,6 +31,17 @@ public class ReportController implements ReportAPI {
     }
 
     @Override
+    public ResponseEntity<Void> updateReportComment(long reportId, String description) {
+        boolean isUpdated = reportService.updateReportComment(reportId, description);
+
+        if (!isUpdated) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
     public ResponseEntity<GetReportListResponse> getAllReports() {
         return ResponseEntity.ok(
             new GetReportListResponse(

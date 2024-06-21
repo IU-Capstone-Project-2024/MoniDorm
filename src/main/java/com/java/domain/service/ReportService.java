@@ -38,4 +38,6 @@ public interface ReportService {
     @NotNull Optional<PostProcessReportResponse> processReportForcefully(@NotNull PostProcessReportRequest request);
 
     boolean deleteReport(@Min(0) long id);
+
+    boolean updateReportComment(@Min(0) long id, String comment);
 }
