@@ -52,6 +52,34 @@ public interface ReportAPI {
     )
     ResponseEntity<GetReportResponse> getReport(@RequestParam(value = "report_id") @Min(0) long reportId);
 
+    @Operation(summary = "Update report comment with certain id")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+                     description = "Report successfully returned",
+                     content = @Content()
+        ),
+
+        @ApiResponse(responseCode = "400",
+                     description = "Request was malformed",
+                     content = @Content()),
+
+        @ApiResponse(responseCode = "403",
+                     description = "Incorrect access token provided",
+                     content = @Content()),
+
+        @ApiResponse(responseCode = "404",
+                     description = "The entity is not found",
+                     content = @Content())
+    })
+    @PatchMapping(
+        path = "/update/comment",
+        headers = "Token"
+    )
+    ResponseEntity<Void> updateReportComment(
+        @RequestParam(value = "report_id") @Min(0) long reportId,
+        @RequestParam String comment
+    );
+
     @Operation(summary = "Get all reports")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200",

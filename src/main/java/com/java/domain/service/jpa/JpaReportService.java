@@ -135,4 +135,13 @@ public class JpaReportService implements ReportService {
 
         return true;
     }
+
+    @Override
+    public boolean updateReportComment(long id, String comment) {
+        var entity = reportRepository.findById(id).orElseThrow(() -> new NotFoundException(EXCEPTION_MESSAGE));
+        entity.setDescription(comment);
+        reportRepository.flush();
+
+        return true;
+    }
 }

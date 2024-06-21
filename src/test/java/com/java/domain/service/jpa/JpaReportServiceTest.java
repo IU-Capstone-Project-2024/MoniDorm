@@ -86,17 +86,20 @@ public class JpaReportServiceTest extends IntegrationEnvironment {
     @Rollback(false)
     @Order(4)
     void givenReport_turnSomeFields_thenCorrectlyTurned() {
+        final String comment = "NEW COMMENT";
         var entity = reportService.getReportById(REPORT_ID_1).orElseThrow();
         boolean resolvedBefore = entity.isResolvedByUser();
         boolean confirmedBefore = entity.isConfirmedByAnalysis();
 
         boolean isUpdatedResolveField = reportService.resolveReportByUser(REPORT_ID_1);
         boolean isUpdatedConfirmedBefore = reportService.confirmReportByAnalysis(REPORT_ID_1);
+        boolean isCommentSettledCorrectly = reportService.updateReportComment(REPORT_ID_1, comment);
         var updatedEntity = reportService.getReportById(REPORT_ID_1).orElseThrow();
 
         assertThat(isUpdatedResolveField && isUpdatedConfirmedBefore).isTrue();
         assertThat(updatedEntity.isResolvedByUser()).isNotEqualTo(resolvedBefore);
         assertThat(updatedEntity.isConfirmedByAnalysis()).isNotEqualTo(confirmedBefore);
+        assertThat(updatedEntity.getDescription()).isEqualTo(comment);
     }
 
     @Test
@@ -125,7 +128,8 @@ public class JpaReportServiceTest extends IntegrationEnvironment {
 
         assertThat(reportService.getAllReports().get()).asList().containsOnly(report_1, report_2);
         assertThat(reportService.getAllReportsByPlacement("plac").get()).asList().containsOnly(report_1, report_2);
-        assertThat(reportService.getAllReportsByDateWindows(null, null).get()).asList().containsOnly(report_1, report_2);
+        assertThat(reportService.getAllReportsByDateWindows(null, null).get()).asList()
+            .containsOnly(report_1, report_2);
         assertThat(reportService.getAllReportsByCategory("category").get()).asList().containsOnly(report_1);
 
         assertThat(reportService.getAllReportsByDateWindows(FAILURE_DATE.minusHours(1), null).get()).asList()
