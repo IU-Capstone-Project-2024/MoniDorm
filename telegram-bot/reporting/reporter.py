@@ -23,7 +23,7 @@ class Report:
         return {
             'category': self.__category,
             'placement': ','.join(self.__placement),
-            'date_time': f'{self.__date_time.isoformat(timespec='milliseconds')}Z',
+            'date_time': f'{self.__date_time.isoformat(timespec="milliseconds")}Z',
             'owner_email': self.__owner_email,
             'description': self.__description
         }

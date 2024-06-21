@@ -44,7 +44,7 @@ class ReportCallbackProvider:
                 else:
                     icon = '📁'
                 builder.button(
-                    text=f'{icon} {child['name']['en']}',
+                    text=f"{icon} {child['name']['en']}",
                     callback_data=ReportCallback(window_id=child_id)
                 )
 
