@@ -11,8 +11,8 @@ from aiogram.fsm.storage.mongo import MongoStorage
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from reporting.reporter import Reporter
-from handling.handlers import router
 from reporting.callbacks import ReportCallbackProvider
+from handling.handlers import router
 from mail.client import Client
 
 

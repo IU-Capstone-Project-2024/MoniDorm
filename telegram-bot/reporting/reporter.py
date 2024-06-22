@@ -1,9 +1,13 @@
+"""
+Description of classes for reporting issues to backend
+"""
+
 import datetime
 from typing import Optional, List
 
 import requests
 
-
+# class representing a failure report
 class Report:
     def __init__(
             self,
@@ -20,15 +24,20 @@ class Report:
         self.__date_time = date_time
 
     def to_post(self):
+        """
+        Converts the report to a dict used for sending to backend
+        :return: dict to be sent
+        """
         return {
             'category': self.__category,
             'placement': ','.join(self.__placement),
-            'date_time': f'{self.__date_time.isoformat(timespec="milliseconds")}Z',
+            'date_time': self.__date_time,
             'owner_email': self.__owner_email,
             'description': self.__description
         }
 
 
+# Builder for a report class
 class ReportBuilder:
     def __init__(self):
         self.__placement = None
@@ -54,7 +63,7 @@ class ReportBuilder:
         return self
 
     def stamp_datetime(self):
-        self.__date_time = datetime.datetime.now()
+        self.__date_time = datetime.datetime.now(datetime.UTC).isoformat()
         return self
 
     def build(self):
@@ -77,8 +86,7 @@ class Reporter:
         }
 
     def report(self, report: Report):
-        print(self.__headers)
-        print(report.to_post())
-        response = requests.post(f'{self.__url}/api/report', headers=self.__headers, json=report.to_post())
-        print(response.status_code, response.json())
-        return dict(response.json())
+        response = requests.post(f'{self.__url}/api/report',
+                                 headers=self.__headers,
+                                 json=report.to_post())
+        print('Report processed', response)
