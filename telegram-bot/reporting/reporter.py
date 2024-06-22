@@ -23,7 +23,7 @@ class Report:
         return {
             'category': self.__category,
             'placement': ','.join(self.__placement),
-            'date_time': f'{self.__date_time.isoformat(timespec='milliseconds')}Z',
+            'date_time': self.__date_time,
             'owner_email': self.__owner_email,
             'description': self.__description
         }
@@ -54,7 +54,7 @@ class ReportBuilder:
         return self
 
     def stamp_datetime(self):
-        self.__date_time = datetime.datetime.now()
+        self.__date_time = datetime.datetime.now(datetime.UTC).isoformat()
         return self
 
     def build(self):
