@@ -11,7 +11,7 @@ class ReportCallback(CallbackData, prefix="report"):
 
 class ReportCallbackProvider:
     def __init__(self, path_to_schemas: str):
-        with open(path_to_schemas, 'r') as f:
+        with open(path_to_schemas, 'r', encoding='utf-8') as f:
             schemas = json.load(f)
 
         window_id = 1

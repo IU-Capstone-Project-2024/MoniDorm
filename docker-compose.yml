@@ -1,20 +1,15 @@
-version: '3.8'
-
 services:
   bot:
     build: .
-    env_file: telegram-bot/.env
+    env_file:
+      - ./telegram-bot/.env.prod
     depends_on:
       - mongo
-    volumes:
-      - .:/app
-    command: python telegram-bot/main.py
 
   mongo:
-    image: mongo:latest
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    env_file:
+      - ./telegram-bot/.env.prod
     ports:
       - "27017:27017"
     volumes:
