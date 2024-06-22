@@ -16,15 +16,19 @@ class ReportCallback(ABC):
 
 
 class CategoryCallback(ReportCallback):
-    def __init__(self, placements: List[str], category: str):
+    def __init__(self, placements: List[str], category: str, parent_id: int):
         self.__placements = placements
         self.__category = category
+        self.__parent_id = parent_id
 
     def placements(self) -> List[str]:
         return self.__placements
 
     def category(self) -> str:
         return self.__category
+
+    def parent_id(self) -> int:
+        return self.__parent_id
 
 
 class TransitionCallback(ReportCallback):
@@ -61,7 +65,8 @@ class ReportCallbackProvider:
             if node["type"] == "failure":
                 self.__callbacks[node_id] = CategoryCallback(
                     categories,
-                    node['id']
+                    node['id'],
+                    parent_id
                 )
                 return node_id
 

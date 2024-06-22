@@ -4,7 +4,7 @@ import random
 import re
 from os import getenv
 
-from aiogram import Router, types
+from aiogram import Router, types, F
 from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
@@ -128,13 +128,13 @@ async def report_processing(
             'placement': callback.placements(),
             'category': callback.category()
         })
-        # TODO: Question - is it better to send report+comment together, or perform update with comment?
         await state.set_state(DialogStates.ReportCommentAwaiting)
         await query.message.edit_text(
             'Thank you for the assistance!\n\n'
             'If you would like to provide some commentaries on failure — '
-            'please, send a message with them, otherwise press the button below',
-            reply_markup=all_callbacks.get_detailed_report_kb()
+            'please, send a message with them, otherwise press the button below\n\n'
+            'If you would like go back — press the corresponding button',
+            reply_markup=all_callbacks.get_detailed_report_kb(callback.parent_id())
         )
     elif isinstance(callback, TransitionCallback):
         await query.message.edit_reply_markup(reply_markup=callback.keyboard())
@@ -147,9 +147,8 @@ async def user_logout_init(msg: Message, state: FSMContext):
 
 
 @router.callback_query(StateFilter(DialogStates.ReportCommentAwaiting),
-                       all_callbacks.DetailedReportCallback.filter())
+                       all_callbacks.FinalizeReport.filter(F.action == all_callbacks.Action.report))
 async def send_report_no_comment(query: CallbackQuery, state: FSMContext, reporter: Reporter):
-    # TODO: send report to API
     user_data = await state.get_data()
     user_report = (ReportBuilder()
                    .add_category(user_data['report']['category'])
@@ -183,3 +182,18 @@ async def extend_report_with_comment(msg: Message, state: FSMContext, reporter: 
 
     await msg.answer('Report is sent! Thank you for detailed failure description!')
     await state.set_state(DialogStates.Authorized)
+
+
+@router.callback_query(StateFilter(DialogStates.ReportCommentAwaiting),
+                       all_callbacks.FinalizeReport.filter(F.action == all_callbacks.Action.abort))
+async def report_processing(
+        query: CallbackQuery,
+        callback_data: all_callbacks.FinalizeReport,
+        state: FSMContext,
+        report_provider: ReportCallbackProvider
+):
+    go_to = callback_data.back_window
+    callback = report_provider.get_callback(go_to)
+    await query.message.edit_text(text='Report a failure!', reply_markup=callback.keyboard())
+    await state.set_state(DialogStates.Reporting)
+

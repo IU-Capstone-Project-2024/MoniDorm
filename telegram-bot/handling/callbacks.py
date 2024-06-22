@@ -1,3 +1,5 @@
+from enum import Enum
+
 from aiogram.filters.callback_data import CallbackData
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
@@ -12,11 +14,19 @@ def get_email_kb():
     return builder.as_markup()
 
 
-class DetailedReportCallback(CallbackData, prefix="report_details"):
-    pass
+class Action(str, Enum):
+    report = "report"
+    abort = "abort"
 
 
-def get_detailed_report_kb():
+class FinalizeReport(CallbackData, prefix="report_details"):
+    action: Action
+    back_window: int
+
+
+def get_detailed_report_kb(parent_window: int):
     builder = InlineKeyboardBuilder()
-    builder.button(text="🛎 Report as is", callback_data=DetailedReportCallback())
+    builder.button(text="🛎 Report as is", callback_data=FinalizeReport(action=Action.report, back_window=parent_window))
+    builder.button(text="👈 Back", callback_data=FinalizeReport(action=Action.abort, back_window=parent_window))
+    builder.adjust(1)
     return builder.as_markup()
