@@ -29,14 +29,15 @@ async def main():
     dp.include_routers(router)
 
     report_callback_provider = ReportCallbackProvider(
-        path_to_schemas='/app/common/generated/failures-schemas.json'
+        path_to_schemas='../common/generated/failures-schemas.json'
     )
+
     mail_client = Client(
         user=getenv("EMAIL_ADDRESS"),
         password=getenv("EMAIL_PASSWORD"),
         hostname=getenv("EMAIL_SMTP_HOST"),
         port=465,
-        path_to_templates="/app/common",
+        path_to_templates="../common",
         message_template="confirmation-email-template.html.j2"
     )
 
