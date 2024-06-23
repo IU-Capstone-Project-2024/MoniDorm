@@ -1,0 +1,19 @@
+services:
+  bot:
+    build: .
+    env_file:
+      - ./telegram-bot/.env.prod
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    env_file:
+      - ./telegram-bot/.env.prod
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

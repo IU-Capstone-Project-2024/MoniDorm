@@ -1,4 +1,4 @@
-# Guide for .env
+## Guide for .env
 
 ### BOT_TOKEN
 
@@ -26,6 +26,8 @@ Set any number of minutes. Recomended 5-10 mins
 
 Link to deployed MongoDB database. Default localhost is `mongodb://localhost:27017`
 
+For Docker, use `mongodb://ROOT_USERNAME:ROOT_PASSWORD@mongo:27017/`
+
 ### API_TOKEN
 
 API Token for server that processes reports. In our case this is token for Java server
@@ -33,3 +35,6 @@ API Token for server that processes reports. In our case this is token for Java 
 ### API_URL
 
 URL for API server
+
+## How to run in Docker?
+```docker-compose up --build```

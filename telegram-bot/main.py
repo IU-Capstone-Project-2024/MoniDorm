@@ -31,6 +31,7 @@ async def main():
     report_callback_provider = ReportCallbackProvider(
         path_to_schemas='../common/generated/failures-schemas.json'
     )
+
     mail_client = Client(
         user=getenv("EMAIL_ADDRESS"),
         password=getenv("EMAIL_PASSWORD"),
