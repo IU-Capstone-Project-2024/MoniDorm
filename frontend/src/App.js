@@ -31,9 +31,14 @@ function App() {
 			</div>
 		</div>
 
-		<div className="App flex items-center justify-center">
-				<iframe src="http://10.90.138.215:3000/d-solo/fdpa1canapou8a/monidorm-dashboard?orgId=1&from=1718219692383&to=1718824492383&panelId=1" width="650" height="400" frameborder="0"></iframe>
+		<div className="App flex items-center justify-center p-2">
+			<iframe src="http://10.90.138.215:3000/d-solo/fdpa1canapou8a/monidorm-dashboard?orgId=1&from=1718219692383&to=1718824492383&panelId=1" width="650" height="400" frameborder="0"></iframe>
 		</div>
+
+		<div className="App flex items-center justify-center p-2">
+			<iframe src="http://10.90.138.215:3000/d-solo/fdpa1canapou8a/monidorm-dashboard?orgId=1&from=1718745134263&to=1719349934263&panelId=2" width="650" height="400" frameborder="0"></iframe>
+		</div>
+
 
 			{/* <label className="cursor-pointer grid place-items-center">
   				<input type="checkbox" value="dark" className="toggle theme-controller bg-base-content row-start-1 col-start-1 col-span-2"/>
