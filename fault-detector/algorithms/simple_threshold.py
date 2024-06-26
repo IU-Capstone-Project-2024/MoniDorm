@@ -11,4 +11,5 @@ class SimpleThreshold(FailureDetectionAlgorithm):
         reports = client.get_grouped_recent_reports(
             self.__tz_shift, self.__time_interval
         )
-        print(reports)
+
+        return reports

@@ -27,7 +27,7 @@ if __name__ == "__main__":
     shift = os.getenv('TIMEZONE_SHIFT')
 
     report_api = ReportAPI()
-    algo = SimpleThreshold('3 hours', '1 minutes')
+    algo = SimpleThreshold(shift, interval)
     detector = Detector(client, algo, report_api)
 
     schedule.every(1).minutes.do(detector.detect)
