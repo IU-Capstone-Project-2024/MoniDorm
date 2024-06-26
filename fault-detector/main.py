@@ -1,8 +1,13 @@
 import os
+import time
 
+import schedule
 from dotenv import load_dotenv
 
+from algorithms.simple_threshold import SimpleThreshold
+from detector import Detector
 import pgclient
+from report_api import ReportAPI
 
 
 def init_client() -> pgclient.PostgresClient:
@@ -20,6 +25,13 @@ if __name__ == "__main__":
     client = init_client()
     interval = os.getenv('PULL_INTERVAL')
     shift = os.getenv('TIMEZONE_SHIFT')
-    for category, location, reports_count, description in \
-            client.get_grouped_recent_reports(interval, shift):
-        print(category, location, reports_count, description)
+
+    report_api = ReportAPI()
+    algo = SimpleThreshold('3 hours', '1 minutes')
+    detector = Detector(client, algo, report_api)
+
+    schedule.every(1).minutes.do(detector.detect)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
