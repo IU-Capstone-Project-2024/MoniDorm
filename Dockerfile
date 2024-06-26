@@ -2,7 +2,7 @@
 ### BUILD
 ###
 
-FROM python:3.10-slim as builder
+FROM python:3.12-slim as builder
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
@@ -22,7 +22,7 @@ RUN pip install -r requirements.txt
 ### DEPLOY
 ###
 
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 COPY --from=builder /opt/venv /opt/venv
 
