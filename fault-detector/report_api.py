@@ -4,4 +4,4 @@ class ReportAPI:
 
     def report(self, reports):
         for report in reports:
-            print(reports)
+            print(report)

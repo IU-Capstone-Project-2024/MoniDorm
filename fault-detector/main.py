@@ -27,7 +27,12 @@ if __name__ == "__main__":
     shift = os.getenv('TIMEZONE_SHIFT')
 
     report_api = ReportAPI()
-    algo = SimpleThreshold(shift, interval)
+    algo = SimpleThreshold(
+        shift,
+        interval,
+        '../common/generated/failures-schemas.json',
+        1
+    )
     detector = Detector(client, algo, report_api)
 
     schedule.every(1).minutes.do(detector.detect)
