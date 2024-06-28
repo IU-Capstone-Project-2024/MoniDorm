@@ -30,12 +30,13 @@ async def auth_init(msg: Message, state: FSMContext):
 async def auth_email_process(msg: Message, state: FSMContext, mail_client: Client):
     user_email = msg.text.strip()
 
-    regexp = re.compile('^(\\w)\\.(\\w+)@innopolis\\.university$')
+    regexp = re.compile('^(\\w)\\.(\\w+)@(innopolis\\.university|innopolis\\.ru)$')
     if regexp.match(user_email):
         code = str(random.randint(100000, 999999))
         mail_client.send_authentication_code(user_email, code)
         await msg.answer(f'Confirmation code was sent to `{user_email}`. '
-                         f'In order to finish authorization, send it here.'
+                         f'In order to finish authorization, send it here. '
+                         f'Code expires in {os.getenv("EMAIL_CODE_EXPIRATION_MINS")} minutes.'
                          f'\n\nIf you figured out that email address contains mistake, '
                          f'press the button below.',
                          reply_markup=all_callbacks.get_email_kb(), parse_mode="Markdown")
@@ -107,7 +108,7 @@ async def failure_report_init(
     ), Command("menu")
 )
 async def interrupt_and_go_to_menu(msg: Message, state: FSMContext):
-    await msg.answer('Everything is interrupted, you are at the main menu now.')
+    await msg.answer('You are at the main menu now 😊')
     await state.set_state(DialogStates.Authorized)
 
 
@@ -141,7 +142,7 @@ async def report_processing(
 
 @router.message(StateFilter(DialogStates.Authorized), Command("logout"))
 async def user_logout_init(msg: Message, state: FSMContext):
-    await msg.answer('See you! Logging out...')
+    await msg.answer('See you! Successfully logged out')
     await state.clear()
 
 
