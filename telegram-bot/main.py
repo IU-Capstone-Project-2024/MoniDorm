@@ -4,6 +4,7 @@ Entrypoint for Telegram bot application
 
 from os import getenv
 import asyncio
+import logging
 
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
@@ -21,6 +22,8 @@ async def main():
     Setting up a Telegram bot with its environment
     :return:
     """
+    logging.basicConfig(level=logging.INFO)
+
     mongo = MongoStorage(AsyncIOMotorClient(getenv("BOT_STORAGE_MONGO_URI")))
 
     bot = Bot(token=getenv("BOT_TOKEN"))

@@ -59,6 +59,7 @@ async def auth_email_revert(callback: types.CallbackQuery, state: FSMContext):
     await callback.message.answer(text='Please, enter your Innopolis University email again in order to authorize.')
     await state.set_data({})
     await state.set_state(DialogStates.AuthorizationAwaiting)
+    await callback.answer('Email reset')
 
 
 @router.message(StateFilter(DialogStates.AuthorizationConfirmationAwaiting))
@@ -98,6 +99,7 @@ async def failure_report_init(
     initial_transition = report_provider.get_callback(1)
     await msg.answer('Report a failure!', reply_markup=initial_transition.keyboard())
     await state.set_state(DialogStates.Reporting)
+    await msg.delete()
 
 
 @router.message(
@@ -110,6 +112,7 @@ async def failure_report_init(
 async def interrupt_and_go_to_menu(msg: Message, state: FSMContext):
     await msg.answer('You are at the main menu now 😊')
     await state.set_state(DialogStates.Authorized)
+    await msg.delete()
 
 
 @router.callback_query(StateFilter(DialogStates.Reporting), report_callbacks.ReportingKbCallback.filter())
@@ -194,3 +197,26 @@ async def report_processing(
     callback = report_provider.get_callback(go_to)
     await query.message.edit_text(text='Report a failure!', reply_markup=callback.keyboard())
     await state.set_state(DialogStates.Reporting)
+
+
+@router.callback_query(lambda _: True)
+async def outdated_button_pressed(
+        query: CallbackQuery
+):
+    """
+    React on outdated button pressures with its removal
+    :param query: button pressure
+    :return: None
+    """
+    await query.answer(text='The action is outdated')
+    await query.message.delete()
+
+
+@router.message(lambda _: True)
+async def invalid_message(message: Message):
+    """
+    React on unexpected messages with its removal
+    :param message: incoming message
+    :return: None
+    """
+    await message.delete()

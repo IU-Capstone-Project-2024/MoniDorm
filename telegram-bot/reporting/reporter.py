@@ -3,6 +3,7 @@ Description of classes for reporting issues to backend
 """
 
 import datetime
+import logging
 from typing import Optional, List
 
 import requests
@@ -79,6 +80,7 @@ class ReportBuilder:
 # class to send reports to API
 class Reporter:
     def __init__(self, url: str, token: str):
+        self.__component = 'reporter'
         self.__url = url
         self.__headers = {
             'Token': token,
@@ -89,4 +91,4 @@ class Reporter:
         response = requests.post(f'{self.__url}/api/report',
                                  headers=self.__headers,
                                  json=report.to_post())
-        print('Report processed', response)
+        logging.info(f'{self.__component}: report is sent — {response}')
