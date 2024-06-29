@@ -1,3 +1,6 @@
+import asyncio
+
+
 import algorithms.template
 from report_api import ReportAPI
 from pgclient import PostgresClient
@@ -16,4 +19,8 @@ class Detector:
 
     def detect(self):
         reports = self.__algorithm(self.__pgclient)
-        self.__report_api.report(reports)
+        loop = asyncio.get_event_loop()
+        if loop.is_closed():
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+        loop.run_until_complete(self.__report_api.report(reports))

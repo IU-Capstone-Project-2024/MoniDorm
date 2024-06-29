@@ -26,16 +26,17 @@ if __name__ == "__main__":
     interval = os.getenv('PULL_INTERVAL')
     shift = os.getenv('TIMEZONE_SHIFT')
 
-    report_api = ReportAPI()
+    report_api = ReportAPI(os.getenv("BOT_TOKEN"))
     algo = SimpleThreshold(
         shift,
         interval,
         '../common/generated/failures-schemas.json',
-        1
+        int(os.getenv("THRESHOLD"))
     )
     detector = Detector(client, algo, report_api)
 
-    schedule.every(1).minutes.do(detector.detect)
+    # TODO: set configurable interval
+    schedule.every(15).seconds.do(detector.detect)
 
     while True:
         schedule.run_pending()
