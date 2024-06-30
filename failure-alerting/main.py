@@ -1,17 +1,17 @@
+import logging
 import os
 import time
-import logging
 
 import schedule
 from aiogram import Bot
 from dotenv import load_dotenv
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from algorithms.simple_threshold import SimpleThreshold
-from detector import Detector
 import pgclient
-from formatters.simple_formatter import SimpleFormatter
 from alerting_service import AlertingService
+from algorithms.threshold_alert_retention import ThresholdWithRetention
+from detector import Detector
+from formatters.summarized_formatter import SummarizedFormatter
 
 
 def init_pgclient() -> pgclient.PostgresClient:
@@ -45,18 +45,19 @@ if __name__ == "__main__":
         bot,
         mongo_client
     )
-    algo = SimpleThreshold(
+    algo = ThresholdWithRetention(
         shift,
         interval,
-        int(os.getenv("THRESHOLD"))
+        int(os.getenv("THRESHOLD")),
+        int(os.getenv("FAILURE_RETENTION_MINUTES"))
     )
-    formatter = SimpleFormatter(
-        '../common/generated/failures-schemas.json'
+    formatter = SummarizedFormatter(
+        '../common/generated/failures-schemas.json',
+        os.getenv("MISTRAL_TOKEN")
     )
     detector = Detector(postgres_client, algo, formatter, report_api)
 
-    # TODO: set configurable interval
-    schedule.every(15).seconds.do(detector.detect)
+    schedule.every(int(os.getenv("CHECKOUT_INTERVAL_MINUTES"))).minutes.do(detector.detect)
 
     while True:
         schedule.run_pending()

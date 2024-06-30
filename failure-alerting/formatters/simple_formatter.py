@@ -19,7 +19,7 @@ class SimpleFormatter(AlertFormatter):
             alerts.append(self.__format_single_alert(failure))
         return alerts
 
-    def __format_single_alert(self, failure: Failure):
+    def _get_human_readable_failure_and_location(self, failure: Failure):
         next_locations = failure.location().split('.')[1:]
         # human readable failure location description
         location_human = [self.__schemas["name"]["en"]]
@@ -39,9 +39,14 @@ class SimpleFormatter(AlertFormatter):
                 failure_human = item["name"]["en"]
                 break
 
+        return location_human, failure_human
+
+    def __format_single_alert(self, failure: Failure):
+        location_human, failure_human = self._get_human_readable_failure_and_location(failure)
         message = f'🔔 Reports are coming in about possible problems with {failure_human}' \
                   f' at {', '.join(location_human)}. There are {failure.reports_count()} of them at this moment.'
         return Alert(
             f'{failure.location()}.{failure.failure()}',
             message
         )
+
