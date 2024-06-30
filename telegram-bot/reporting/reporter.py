@@ -8,6 +8,7 @@ from typing import Optional, List
 
 import requests
 
+
 # class representing a failure report
 class Report:
     def __init__(
@@ -31,7 +32,7 @@ class Report:
         """
         return {
             'category': self.__category,
-            'placement': ','.join(self.__placement),
+            'placement': '.'.join(self.__placement),
             'date_time': self.__date_time,
             'owner_email': self.__owner_email,
             'description': self.__description

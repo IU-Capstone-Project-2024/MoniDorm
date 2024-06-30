@@ -34,8 +34,8 @@ class SimpleThreshold(FailureDetectionAlgorithm):
 
         return fault_descriptions
 
-    def __formulate_report(self, fault: str, location: str, reports_cnt: int) -> Report:
-        locations = location.split(',')[1:]
+    def __formulate_report(self, fault: str, fault_location: str, reports_cnt: int) -> Report:
+        locations = fault_location.split(',')[1:]
 
         location_desc = [self.__schemas["name"]["en"]]
 
@@ -57,6 +57,6 @@ class SimpleThreshold(FailureDetectionAlgorithm):
         message = f'🔔 Reports are coming in about possible problems with {failure_desc}' \
                   f' at {', '.join(location_desc)}. There are {reports_cnt} of them at this moment.'
         return Report(
-            f'{location}.{fault}',
+            f'{fault_location}.{fault}',
             message
         )

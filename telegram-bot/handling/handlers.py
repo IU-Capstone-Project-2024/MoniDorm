@@ -2,6 +2,7 @@ import datetime
 import os
 import random
 import re
+from copy import deepcopy
 from os import getenv
 
 from aiogram import Router, types, F
@@ -86,6 +87,7 @@ async def auth_code_process(message: Message, state: FSMContext, mail_client: Cl
         await message.answer("You are authorized now! Enjoy the usage of monidorm!")
         await state.set_state(DialogStates.Authorized)
         await state.update_data(expected_code="")
+        await state.update_data(alerts=list())
     else:
         await message.answer("The code seems to be incorrect. Please, try again or reset the email.")
 
@@ -97,7 +99,7 @@ async def failure_report_init(
         state: FSMContext
 ):
     initial_transition = report_provider.get_callback(1)
-    await msg.answer('Report a failure!', reply_markup=initial_transition.keyboard())
+    await msg.answer('Report a failure!', reply_markup=initial_transition.kb_builder().as_markup())
     await state.set_state(DialogStates.Reporting)
     await msg.delete()
 
@@ -124,6 +126,7 @@ async def report_processing(
 ):
     go_to = callback_data.window_id
     callback = report_provider.get_callback(go_to)
+    user_data = await state.get_data()
     if isinstance(callback, CancelCallback):
         await query.message.delete()
         await state.set_state(DialogStates.Authorized)
@@ -140,7 +143,53 @@ async def report_processing(
         })
         await state.set_state(DialogStates.ReportCommentAwaiting)
     elif isinstance(callback, TransitionCallback):
-        await query.message.edit_reply_markup(reply_markup=callback.keyboard())
+        kb_builder = deepcopy(callback.kb_builder())
+        transition_path = callback.get_path()
+        if transition_path not in user_data['alerts']:
+            kb_builder.button(text='🔕 No alerts',
+                              callback_data=report_callbacks.AlertsStatusCallback(
+                                  window_id=callback_data.window_id,
+                                  path=transition_path,
+                                  enable=True
+                              ))
+        else:
+            kb_builder.button(text='🔔️ Alerts enabled',
+                              callback_data=report_callbacks.AlertsStatusCallback(
+                                  window_id=callback_data.window_id,
+                                  path=transition_path,
+                                  enable=False
+                              ))
+        await query.message.edit_reply_markup(reply_markup=kb_builder.as_markup())
+
+
+@router.callback_query(StateFilter(DialogStates.Reporting), report_callbacks.AlertsStatusCallback.filter())
+async def alerts_status_switch(
+        query: CallbackQuery,
+        callback_data: report_callbacks.AlertsStatusCallback,
+        state: FSMContext,
+        report_provider: ReportCallbackProvider
+):
+    kb_builder = deepcopy(report_provider.get_callback(callback_data.window_id).kb_builder())
+
+    user_data = await state.get_data()
+    if callback_data.enable:
+        user_data['alerts'].append(callback_data.path)
+        kb_builder.button(text='🔔️ Alerts enabled',
+                          callback_data=report_callbacks.AlertsStatusCallback(
+                              window_id=callback_data.window_id,
+                              path=callback_data.path,
+                              enable=False
+                          ))
+    else:
+        user_data['alerts'].remove(callback_data.path)
+        kb_builder.button(text='🔕 No alerts',
+                          callback_data=report_callbacks.AlertsStatusCallback(
+                              window_id=callback_data.window_id,
+                              path=callback_data.path,
+                              enable=True
+                          ))
+    await state.set_data(user_data)
+    await query.message.edit_reply_markup(reply_markup=kb_builder.as_markup())
 
 
 @router.message(StateFilter(DialogStates.Authorized), Command("logout"))
@@ -195,7 +244,10 @@ async def report_processing(
 ):
     go_to = callback_data.back_window
     callback = report_provider.get_callback(go_to)
-    await query.message.edit_text(text='Report a failure!', reply_markup=callback.keyboard())
+    await query.message.edit_text(
+        text='Report a failure!',
+        reply_markup=callback.kb_builder().as_markup()
+    )
     await state.set_state(DialogStates.Reporting)
 
 

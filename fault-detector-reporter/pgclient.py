@@ -1,3 +1,5 @@
+import logging
+
 import psycopg2
 
 
@@ -10,7 +12,7 @@ class PostgresClient:
             user=user,
             password=password
         )
-        print('Connection with PostgreSQL database established')
+        logging.info('Connection with PostgreSQL database established')
         self.__cur = self.__conn.cursor()
 
     def get_grouped_recent_reports(self, tz_shift: str, time_interval: str):
