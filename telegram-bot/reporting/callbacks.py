@@ -1,5 +1,6 @@
 import json
 from abc import ABC
+from copy import deepcopy
 from typing import List
 
 from aiogram.filters.callback_data import CallbackData
@@ -41,12 +42,37 @@ class CategoryCallback(ReportCallback):
 
 
 class TransitionCallback(ReportCallback):
-    def __init__(self, placements: List[str], kb_builder: InlineKeyboardBuilder):
+    def __init__(
+            self,
+            window_id: int,
+            placements: List[str],
+            kb_builder: InlineKeyboardBuilder
+    ):
+        self.__window_id = window_id
         self.__kb_builder = kb_builder
         self.__placements = placements
 
-    def kb_builder(self) -> InlineKeyboardBuilder:
+    def __report_kb_builder(self) -> InlineKeyboardBuilder:
         return self.__kb_builder
+
+    def keyboard(self, alerts_enabled: bool):
+        builder = deepcopy(self.__report_kb_builder())
+        if alerts_enabled:
+            builder.button(text='🔔️ Alerts enabled',
+                           callback_data=AlertsStatusCallback(
+                               window_id=self.__window_id,
+                               path=self.get_path(),
+                               enable=False
+                           ))
+        else:
+            builder.button(text='🔕 No alerts',
+                           callback_data=AlertsStatusCallback(
+                               window_id=self.__window_id,
+                               path=self.get_path(),
+                               enable=True
+                           ))
+        builder.adjust(3, repeat=True)
+        return builder.as_markup()
 
     def get_path(self) -> str:
         return '.'.join(self.__placements)
@@ -86,7 +112,7 @@ class ReportCallbackProvider:
             for child in node["items"]:
                 child_id = __dfs(child, node_id, categories + [node['id']])
                 if child["type"] == "failure":
-                    icon = '🔔'
+                    icon = '⚠️'
                 else:
                     icon = '📁'
                 builder.button(
@@ -105,7 +131,10 @@ class ReportCallbackProvider:
             builder.adjust(3)
 
             self.__callbacks[node_id] = TransitionCallback(
-                categories + [node["id"]], builder)
+                node_id,
+                categories + [node["id"]],
+                builder
+            )
 
             return node_id
 
