@@ -8,10 +8,11 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc libpq-dev
+    apt-get install -y --no-install-recommends gcc && \
+    apt-get install -y libpq-dev python3-dev
 
 RUN pip install virtualenv && \
-    pip install psycopg2-binary
+    pip install psycopg2
 
 RUN virtualenv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
