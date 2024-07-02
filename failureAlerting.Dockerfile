@@ -10,7 +10,8 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc
 
-RUN pip install virtualenv
+RUN pip install virtualenv && \
+    pip install psycopg2-binary
 
 RUN virtualenv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
