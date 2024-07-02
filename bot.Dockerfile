@@ -7,9 +7,9 @@ FROM python:3.12-alpine as builder
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc && \
-    apt-get install -y libpq-dev gcc
+RUN apk update && \
+    apk add --no-cache postgresql-libs && \
+    apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev
 
 RUN pip install virtualenv
 
