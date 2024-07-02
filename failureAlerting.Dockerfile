@@ -9,10 +9,9 @@ ENV PYTHONUNBUFFERED 1
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc && \
-    apt-get install -y libpq-dev python3-dev
+    apt-get install -y libpq-dev gcc
 
-RUN pip install virtualenv && \
-    pip install psycopg2
+RUN pip install virtualenv
 
 RUN virtualenv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
