@@ -1,10 +1,12 @@
 services:
   bot:
-    build: .
+    build: ./bot.Dockerfile
     env_file:
       - ./telegram-bot/.env.prod
     depends_on:
       - mongo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   mongo:
     image: mongodb/mongodb-community-server:6.0-ubi8
@@ -14,6 +16,15 @@ services:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
+
+  failure-alerting-service:
+    build: ./failureAlerting.Dockerfile
+    env_file:
+      - ./failure-alerting/.env.prod
+    depends_on:
+      - bot
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   mongo-data:
