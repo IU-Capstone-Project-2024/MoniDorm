@@ -1,6 +1,8 @@
 services:
   bot:
-    build: ./bot.Dockerfile
+    build:
+      - context: .
+      - dockerfile: ./bot.Dockerfile
     env_file:
       - ./telegram-bot/.env.prod
     depends_on:
@@ -18,7 +20,9 @@ services:
       - mongo-data:/data/db
 
   failure-alerting-service:
-    build: ./failureAlerting.Dockerfile
+    build:
+      - context: .
+      - dockerfile: ./failureAlerting.Dockerfile
     env_file:
       - ./failure-alerting/.env.prod
     depends_on:
