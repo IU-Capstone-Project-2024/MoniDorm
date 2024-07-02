@@ -25,6 +25,10 @@ RUN pip install -r requirements.txt
 
 FROM python:3.12-alpine
 
+RUN apk update && \
+    apk add --no-cache postgresql-libs && \
+    apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev
+
 COPY --from=builder /opt/venv /opt/venv
 
 ENV PATH="/opt/venv/bin:$PATH"
