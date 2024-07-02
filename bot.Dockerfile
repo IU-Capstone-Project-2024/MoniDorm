@@ -2,13 +2,14 @@
 ### BUILD
 ###
 
-FROM python:3.12-slim as builder
+FROM python:3.12-alpine as builder
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc
+RUN apk update && \
+    apk add --no-cache postgresql-libs && \
+    apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev
 
 RUN pip install virtualenv
 
@@ -22,7 +23,11 @@ RUN pip install -r requirements.txt
 ### DEPLOY
 ###
 
-FROM python:3.12-slim
+FROM python:3.12-alpine
+
+RUN apk update && \
+    apk add --no-cache postgresql-libs && \
+    apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev
 
 COPY --from=builder /opt/venv /opt/venv
 
