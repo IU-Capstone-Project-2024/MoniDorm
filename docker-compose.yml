@@ -1,8 +1,8 @@
 services:
   bot:
     build:
-      - context: .
-      - dockerfile: ./bot.Dockerfile
+      context: .
+      dockerfile: ./bot.Dockerfile
     env_file:
       - ./telegram-bot/.env.prod
     depends_on:
@@ -21,8 +21,8 @@ services:
 
   failure-alerting-service:
     build:
-      - context: .
-      - dockerfile: ./failureAlerting.Dockerfile
+      context: .
+      dockerfile: ./failureAlerting.Dockerfile
     env_file:
       - ./failure-alerting/.env.prod
     depends_on:
