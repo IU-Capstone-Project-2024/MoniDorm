@@ -9,6 +9,7 @@ import {
     BrowserRouter as Router,
     Routes,
     Route,
+	Navigate
 } from "react-router-dom";
 function App() {
     return (
@@ -17,10 +18,11 @@ function App() {
 				{/* <Navbar />
 				<Drawer /> */}
 				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path="/pages/administrators" element={<Administrators />} />
-					<Route path="/pages/reports" element={<Reports />} />
-					<Route path="/pages/settings" element={<Settings />} />
+					<Route path="/" element={<Navigate to="/dashboard" replace />} />
+					<Route path="/dashboard" element={<Home />} />
+					<Route path="/administrators" element={<Administrators />} />
+					<Route path="/reports" element={<Reports />} />
+					<Route path="/settings" element={<Settings />} />
 				</Routes>
 			</div>
 		</Router>

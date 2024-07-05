@@ -1,14 +1,12 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import Drawer from '../components/Drawer';
+import DrawerReports from '../components/DrawerReports';
 
 const Reports = () => {
     return (
         <div>
-            <h1>Reports</h1>
             <Navbar />
-            <Drawer />
-            
+            <DrawerReports />
         </div>
     );
 };

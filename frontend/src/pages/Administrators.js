@@ -1,13 +1,12 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import Drawer from '../components/Drawer';
+import DrawerAdmins from '../components/DrawerAdmins';
 
 const Administrators = () => {
     return (
         <div>
             <Navbar />
-            <Drawer />
-            <h1>Administrators</h1>
+            <DrawerAdmins />
         </div>
     );
 };

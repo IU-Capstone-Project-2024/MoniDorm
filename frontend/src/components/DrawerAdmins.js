@@ -10,10 +10,42 @@ const Drawer = () => {
         <div className="drawer lg:drawer-open">
   <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
   <div className="drawer-content flex flex-col items-center justify-center">
-  <div className="App flex items-center justify-center">
-			<iframe className='pr-2' src="http://10.90.138.215:3000/d-solo/fdpa1canapou8a/monidorm-dashboard?orgId=1&from=1718219692383&to=1718824492383&panelId=1" title="dashboard 1" width="450" height="400" frameborder="0"></iframe>
-            <iframe className='pl-2' src="http://10.90.138.215:3000/d-solo/fdpa1canapou8a/monidorm-dashboard?orgId=1&from=1718745134263&to=1719349934263&panelId=2" title="dashboard 2" width="450" height="400" frameborder="0"></iframe>
-		</div>
+  <div className="overflow-x-auto">
+  <table className="table">
+    {/* head */}
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Dorm</th>
+        <th>Role</th>
+        <th>Info</th>
+      </tr>
+    </thead>
+    <tbody>
+      {/* row 1 */}
+      <tr className='hover'>
+        <th>John Doe</th>
+        <td>7</td>  
+        <td>Dorm Admin</td>
+        <td><button className="btn btn-outline btn-primary w-24">View</button></td>
+      </tr>
+      {/* row 2 */}
+      <tr className="hover">
+        <th>name</th>
+        <td>5</td>  
+        <td>Dorm Admin</td>
+        <td><button className="btn btn-outline btn-primary w-24">View</button></td>
+      </tr>
+      {/* row 3 */}
+      <tr>
+        <th>name</th>
+        <td>7</td>  
+        <td>Repairer</td>
+        <td><button className="btn btn-outline btn-primary w-24">View</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
     <label htmlFor="my-drawer-2" className="btn btn-primary drawer-button lg:hidden">
       Open drawer
     </label>
