@@ -41,10 +41,15 @@
         <maven-enforcer-plugin.version>3.4.1</maven-enforcer-plugin.version>
         <git-commit-id-maven.plugin>7.0.0</git-commit-id-maven.plugin>
         <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
+        <maven-sonar-plugin.version>3.9.1.2184</maven-sonar-plugin.version>
 
         <!-- Linters -->
         <maven-checkstyle-plugin.version>3.3.1</maven-checkstyle-plugin.version>
         <checkstyle.version>10.12.7</checkstyle.version>
+
+        <!-- SonarQubeCloud -->
+        <sonar.organization>capstoneproject24</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencyManagement>
@@ -333,6 +338,11 @@
 
 
             <!-- Checkers -->
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>${maven-sonar-plugin.version}</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
