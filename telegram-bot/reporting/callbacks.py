@@ -86,7 +86,7 @@ class CancelCallback(ReportCallback):
 class ReportCallbackProvider:
     def __init__(self, path_to_schemas: str):
         with open(path_to_schemas, 'r') as f:
-            schemas = json.load(f)
+            self.__schemas = json.load(f)
 
         window_id = 1
         self.__callbacks = {
@@ -138,7 +138,20 @@ class ReportCallbackProvider:
 
             return node_id
 
-        __dfs(schemas, 0, list())
+        __dfs(self.__schemas, 0, list())
 
     def get_callback(self, callback_id):
         return self.__callbacks[callback_id]
+
+    def get_human_readable_path_en(self, path: str) -> List[str]:
+        next_id = path.split('.')[1:]
+        human_readable = [self.__schemas["name"]["en"]]
+
+        node = self.__schemas
+        for item_id in next_id:
+            for item in node["items"]:
+                if item["id"] == item_id:
+                    node = item
+                    human_readable.append(node["name"]["en"])
+                    break
+        return human_readable

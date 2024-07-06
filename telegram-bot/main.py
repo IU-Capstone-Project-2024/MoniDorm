@@ -6,6 +6,8 @@ from os import getenv
 import asyncio
 import logging
 
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.mongo import MongoStorage
@@ -26,9 +28,13 @@ async def main():
 
     mongo = MongoStorage(AsyncIOMotorClient(getenv("BOT_STORAGE_MONGO_URI")))
 
-    bot = Bot(token=getenv("BOT_TOKEN"))
+    bot = Bot(
+        token=getenv("BOT_TOKEN"),
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML)
+    )
     dp = Dispatcher(storage=mongo)
 
+    await bot.delete_webhook(drop_pending_updates=True)
     dp.include_routers(router)
 
     report_callback_provider = ReportCallbackProvider(
