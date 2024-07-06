@@ -21,7 +21,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 @WebFluxTest(controllers = ReportController.class)
 @AutoConfigureWebTestClient()
-public class ReportControllerTest {
+class ReportControllerTest {
     private static final String COMMON_AUTHORIZATION_HEADER_NAME = "Token";
     private static final String COMMON_HEADER_VALUE = "token";
 
