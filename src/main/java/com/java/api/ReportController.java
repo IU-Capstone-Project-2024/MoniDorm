@@ -6,10 +6,13 @@ import com.java.api.model.GetReportResponse;
 import com.java.api.model.PostFetchReportsByDateRequest;
 import com.java.api.model.PostProcessReportRequest;
 import com.java.api.model.PostProcessReportResponse;
+import com.java.domain.model.Report;
 import com.java.domain.service.ReportService;
+import java.util.Comparator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -98,7 +101,18 @@ public class ReportController implements ReportAPI {
 
     @Override
     public ResponseEntity<PostProcessReportResponse> processReport(PostProcessReportRequest request) {
-        var createdEntity = reportService.processReport(request).orElseThrow();
+        PostProcessReportResponse createdEntity;
+        try {
+            createdEntity = reportService.processReport(request).orElseThrow();
+        } catch (JpaSystemException e) {
+            createdEntity = reportService.getAllReportsByPlacement(request.placement())
+                .orElseThrow().stream()
+                .filter(report -> report.getCategory().equals(request.category())
+                                  && report.getOwnerEmail().equals(request.ownerEmail()))
+                .max(Comparator.comparing(Report::getFailureDate))
+                .map(report -> new PostProcessReportResponse(report.getId(), report.getProceededDate()))
+                .orElseThrow();
+        }
 
         return ResponseEntity.ok(new PostProcessReportResponse(
             createdEntity.id(), createdEntity.lastSuccessfullyProceededDate()

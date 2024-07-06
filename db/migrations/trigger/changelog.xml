@@ -7,7 +7,5 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
        http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-    <include file="init/changelog.xml" relativeToChangelogFile="true"/>
-    <include file="trigger/changelog.xml" relativeToChangelogFile="true"/>
-
+    <include file="trigger-prevention-ddos-insert.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>
