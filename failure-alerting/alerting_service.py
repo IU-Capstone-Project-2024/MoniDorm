@@ -27,7 +27,10 @@ class AlertingService:
 
         subscribers = list()
         for id_with_alerts in ids_with_alerts:
-            if any(report.failure_id().startswith(x) for x in id_with_alerts['data']['alerts']):
-                chat_id = int(id_with_alerts['_id'].split(':')[-1])
-                subscribers.append(chat_id)
+            try:
+                if any(report.failure_id().startswith(x) for x in id_with_alerts['data']['alerts']):
+                    chat_id = int(id_with_alerts['_id'].split(':')[-1])
+                    subscribers.append(chat_id)
+            except KeyError:
+                pass
         return subscribers

@@ -36,7 +36,7 @@ def get_detailed_report_kb(parent_window: int):
 def get_main_menu_kb() -> ReplyKeyboardMarkup:
     builder = ReplyKeyboardBuilder()
     builder.button(text="⚠️ Report")
-    builder.button(text="👋 Logout")
     builder.button(text="📔 My alerts")
+    builder.button(text="👋 Logout")
     builder.adjust(1)
     return builder.as_markup()

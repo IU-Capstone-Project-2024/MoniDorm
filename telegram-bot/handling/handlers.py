@@ -9,7 +9,6 @@ from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 
-import callbacks
 import handling.callbacks as all_callbacks
 import reporting.callbacks as report_callbacks
 from handling.dialog import DialogStates
@@ -86,7 +85,7 @@ async def auth_code_process(message: Message, state: FSMContext, mail_client: Cl
         mail_client.send_authentication_code(user_email, code)
     elif expected_code == message.text:
         await message.answer("You are authorized now! Enjoy the usage of monidorm!",
-                             reply_markup=callbacks.get_main_menu_kb())
+                             reply_markup=all_callbacks.get_main_menu_kb())
         await state.set_state(DialogStates.Authorized)
         await state.update_data(expected_code="")
         await state.update_data(alerts=list())
@@ -129,7 +128,7 @@ async def failure_report_init(
     ), Command("menu")
 )
 async def interrupt_and_go_to_menu(msg: Message, state: FSMContext):
-    await msg.answer('You are at the main menu now 😊', reply_markup=callbacks.get_main_menu_kb())
+    await msg.answer('You are at the main menu now 😊', reply_markup=all_callbacks.get_main_menu_kb())
     await state.set_state(DialogStates.Authorized)
     await msg.delete()
 
@@ -146,7 +145,7 @@ async def report_processing(
     user_data = await state.get_data()
     if isinstance(callback, CancelCallback):
         await query.message.reply(text="You are at the main menu now 😊",
-                                  reply_markup=callbacks.get_main_menu_kb())
+                                  reply_markup=all_callbacks.get_main_menu_kb())
         await query.message.delete()
         await state.set_state(DialogStates.Authorized)
     elif isinstance(callback, CategoryCallback):
@@ -202,7 +201,7 @@ async def user_logout_init(msg: Message, state: FSMContext):
 async def send_report_no_comment(query: CallbackQuery, state: FSMContext, reporter: Reporter):
     await query.message.answer(
         'Report is sent. Thank you!',
-        reply_markup=callbacks.get_main_menu_kb()
+        reply_markup=all_callbacks.get_main_menu_kb()
     )
     await query.message.delete()
 
@@ -237,7 +236,7 @@ async def extend_report_with_comment(msg: Message, state: FSMContext, reporter: 
     await msg.bot.delete_message(chat_id=msg.chat.id, message_id=prev_msg_id)
 
     await msg.answer('Report is sent! Thank you for detailed failure description!',
-                     reply_markup=callbacks.get_main_menu_kb())
+                     reply_markup=all_callbacks.get_main_menu_kb())
     await state.set_state(DialogStates.Authorized)
     await state.update_data(report=report)
 
