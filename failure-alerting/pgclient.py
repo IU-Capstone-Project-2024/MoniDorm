@@ -26,7 +26,10 @@ class PostgresClient:
             group by
             category, placement;
         """)
-        return self.__cur.fetchall()
+
+        rows = self.__cur.fetchall()
+        self.__conn.rollback()
+        return rows
 
     def __del__(self):
         self.__cur.close()

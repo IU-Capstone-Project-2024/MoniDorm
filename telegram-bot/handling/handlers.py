@@ -5,6 +5,7 @@ import re
 from os import getenv
 
 from aiogram import Router, types, F
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import Command, StateFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
@@ -233,7 +234,11 @@ async def extend_report_with_comment(msg: Message, state: FSMContext, reporter: 
     reporter.report(user_report)
 
     prev_msg_id = msg.message_id - 1
-    await msg.bot.delete_message(chat_id=msg.chat.id, message_id=prev_msg_id)
+
+    try:
+        await msg.bot.delete_message(chat_id=msg.chat.id, message_id=prev_msg_id)
+    except TelegramBadRequest:
+        pass
 
     await msg.answer('Report is sent! Thank you for detailed failure description!',
                      reply_markup=all_callbacks.get_main_menu_kb())
