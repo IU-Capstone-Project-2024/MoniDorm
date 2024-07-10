@@ -10,13 +10,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebCORSConfiguration {
     @Bean
     public WebMvcConfigurer corsMappingConfigurer() {
+        final int maxAgeValue = 3600;
+
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NotNull CorsRegistry registry) {
                 registry.addMapping("/**")
                     .allowedOrigins("http://localhost:8080", "http://localhost:80")
                     .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS", "HEAD")
-                    .maxAge(3600)
+                    .maxAge(maxAgeValue)
                     .allowedHeaders("Requestor-Type")
                     .exposedHeaders("X-Get-Header");
             }
