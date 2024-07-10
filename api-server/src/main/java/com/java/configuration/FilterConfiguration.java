@@ -16,7 +16,7 @@ public class FilterConfiguration {
         FilterRegistrationBean<AuthorizationTokenFilter> registrationBean = new FilterRegistrationBean<>();
 
         registrationBean.setFilter(new AuthorizationTokenFilter(configuration));
-        registrationBean.addUrlPatterns("/api/*");
+        registrationBean.addUrlPatterns("/api/temporary_disabled");
         registrationBean.setOrder(1);
 
         return registrationBean;

@@ -5,8 +5,13 @@ on:
   pull_request:
     paths:
       - .github/workflows/scrapper.yml
+      - api-server/src/**
       - src/**
 #      - Dockerfile
+
+defaults:
+  run:
+    working-directory: api-server
 
 env:
   REGISTRY: ghcr.io
