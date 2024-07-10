@@ -2,9 +2,9 @@
 # BUILD STAGE
 #
 FROM maven AS build
-COPY src /home/app/src
+COPY api-server/src /home/app/src
 COPY .git /home/app/.git
-COPY pom.xml /home/app
+COPY api-server/pom.xml /home/app
 RUN mvn -f /home/app/pom.xml -Dskip.unit.tests=true clean package
 
 #

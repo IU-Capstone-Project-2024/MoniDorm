@@ -26,7 +26,12 @@ public class AuthorizationTokenFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
+        var token = request.getHeader("Authorization");
+
         try {
+            if (token == null || !token.equals(apiToken)) {
+                throw new MissingOrIncorrectAuthorizationHeaderException();
+            }
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (MissingOrIncorrectAuthorizationHeaderException exception) {
             response.sendError(HttpStatus.FORBIDDEN.value());
