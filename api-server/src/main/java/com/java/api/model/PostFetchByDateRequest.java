@@ -6,7 +6,7 @@ import jakarta.annotation.Nullable;
 import java.time.OffsetDateTime;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record PostFetchReportsByDateRequest(
+public record PostFetchByDateRequest(
     @Nullable OffsetDateTime startDate,
     @Nullable OffsetDateTime endDate
 ) {

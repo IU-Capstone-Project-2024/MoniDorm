@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
--- changeset catorleader:2
+-- changeset catorleader:3
 CREATE OR REPLACE FUNCTION prevent_duplicate_reports() RETURNS TRIGGER AS '
 DECLARE
     N_minutes INTERVAL := ''15 minutes'';

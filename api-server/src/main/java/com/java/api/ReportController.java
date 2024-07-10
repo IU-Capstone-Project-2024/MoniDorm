@@ -3,7 +3,7 @@ package com.java.api;
 import com.java.api.exception.NotFoundException;
 import com.java.api.model.GetReportListResponse;
 import com.java.api.model.GetReportResponse;
-import com.java.api.model.PostFetchReportsByDateRequest;
+import com.java.api.model.PostFetchByDateRequest;
 import com.java.api.model.PostProcessReportRequest;
 import com.java.api.model.PostProcessReportResponse;
 import com.java.domain.model.Report;
@@ -56,7 +56,7 @@ public class ReportController implements ReportAPI {
     }
 
     @Override
-    public ResponseEntity<GetReportListResponse> getReportsByDateWindow(PostFetchReportsByDateRequest request) {
+    public ResponseEntity<GetReportListResponse> getReportsByDateWindow(PostFetchByDateRequest request) {
         return ResponseEntity.ok(
             new GetReportListResponse(
                 reportService.getAllReportsByDateWindows(request.startDate(), request.endDate()).orElseThrow().stream()
