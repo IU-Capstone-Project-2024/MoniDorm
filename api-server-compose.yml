@@ -3,7 +3,7 @@ services:
     image: postgres:16
     ports:
       - "5432:5432"
-    env_file: ./.env
+    env_file: ./api-server/.env
     networks:
       - backend
     volumes:
@@ -13,7 +13,7 @@ services:
     depends_on:
       - postgresql
     env_file:
-      - ./.env
+      - ./api-server/.env
     command:
       - --changelog-file=db.master-changelog.xml
       - --driver=org.postgresql.Driver
@@ -22,11 +22,12 @@ services:
       - --password=${POSTGRES_PASSWORD}
       - update
     volumes:
-      - ./db/migrations:/liquibase/changelog
+      - ./api-server/db/migrations:/liquibase/changelog
     networks:
       - backend
   monidorm:
     build:
+      dockerfile: ./api-server/Dockerfile
       context: .
       pull: false
     ports:
@@ -35,7 +36,7 @@ services:
     networks:
       - backend
     env_file:
-      - ./.env
+      - ./api-server/.env
     depends_on:
       - postgresql
       - liquibase
