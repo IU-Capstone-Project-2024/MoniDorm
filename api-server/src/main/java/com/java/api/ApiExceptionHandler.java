@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @CrossOrigin
 public class ApiExceptionHandler {
     @ExceptionHandler(value = {NotFoundException.class})
-    public ResponseEntity<Void> handleMissingEntity(NotFoundException exception) {
+    public ResponseEntity<Void> handleMissingEntity() {
         return ResponseEntity.status(NotFoundException.HTTP_STATUS).build();
     }
 }
