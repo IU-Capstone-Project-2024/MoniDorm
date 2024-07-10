@@ -316,6 +316,7 @@
                         <exclude>com/java/api/ApiExceptionHandler*</exclude>
                         <exclude>com/java/configuration/**</exclude>
                         <exclude>com/java/domain/model/Report*</exclude>
+                        <exclude>com/java/domain/model/Failure*</exclude>
                         <exclude>com/java/domain/repository/**</exclude>
                         <exclude>com/java/MonidormApplication*</exclude>
                     </excludes>
