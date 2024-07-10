@@ -3,7 +3,7 @@ package com.java.api;
 import com.java.api.exception.NotFoundException;
 import com.java.api.model.GetReportListResponse;
 import com.java.api.model.GetReportResponse;
-import com.java.api.model.PostFetchReportsByDateRequest;
+import com.java.api.model.PostFetchByDateRequest;
 import com.java.api.model.PostProcessReportRequest;
 import com.java.api.model.PostProcessReportResponse;
 import com.java.domain.model.Report;
@@ -13,12 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.orm.jpa.JpaSystemException;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin
 @Log4j2
 public class ReportController implements ReportAPI {
     private static final String NOT_FOUND_REPORT = "Report with such %s is not found";
@@ -58,7 +56,7 @@ public class ReportController implements ReportAPI {
     }
 
     @Override
-    public ResponseEntity<GetReportListResponse> getReportsByDateWindow(PostFetchReportsByDateRequest request) {
+    public ResponseEntity<GetReportListResponse> getReportsByDateWindow(PostFetchByDateRequest request) {
         return ResponseEntity.ok(
             new GetReportListResponse(
                 reportService.getAllReportsByDateWindows(request.startDate(), request.endDate()).orElseThrow().stream()

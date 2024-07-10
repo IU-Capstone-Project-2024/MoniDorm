@@ -2,7 +2,7 @@ package com.java.api;
 
 import com.java.api.model.GetReportListResponse;
 import com.java.api.model.GetReportResponse;
-import com.java.api.model.PostFetchReportsByDateRequest;
+import com.java.api.model.PostFetchByDateRequest;
 import com.java.api.model.PostProcessReportRequest;
 import com.java.api.model.PostProcessReportResponse;
 import com.java.domain.model.Report;
@@ -109,7 +109,7 @@ class ReportControllerTest {
     void givenCorrectWindow_thenWhenPullReportsInWindow_correctlyFetched() {
         var startTime = REPORT.getFailureDate().minusHours(1);
         var endTime = REPORT.getFailureDate().plusHours(1);
-        var request = new PostFetchReportsByDateRequest(startTime, endTime);
+        var request = new PostFetchByDateRequest(startTime, endTime);
         Mockito.when(reportService.getAllReportsByDateWindows(Mockito.any(), Mockito.any()))
             .thenReturn(Optional.of(List.of(REPORT)));
 

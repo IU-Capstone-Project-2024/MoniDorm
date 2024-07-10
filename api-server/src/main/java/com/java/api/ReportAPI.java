@@ -2,7 +2,7 @@ package com.java.api;
 
 import com.java.api.model.GetReportListResponse;
 import com.java.api.model.GetReportResponse;
-import com.java.api.model.PostFetchReportsByDateRequest;
+import com.java.api.model.PostFetchByDateRequest;
 import com.java.api.model.PostProcessReportRequest;
 import com.java.api.model.PostProcessReportResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -124,7 +124,7 @@ public interface ReportAPI {
         headers = "Token"
     )
     ResponseEntity<GetReportListResponse> getReportsByDateWindow(
-        @RequestBody @NotNull @Valid PostFetchReportsByDateRequest request
+        @RequestBody @NotNull @Valid PostFetchByDateRequest request
     );
 
     @Operation(summary = "Get all the reports by the placement")

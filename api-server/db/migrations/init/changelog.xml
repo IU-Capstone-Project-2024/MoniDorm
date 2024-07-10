@@ -8,4 +8,5 @@
        http://www.liquibase.org/xml/ns/dbchangelog-ext https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <include file="report-table-init.sql" relativeToChangelogFile="true"/>
+    <include file="failure-table-init.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>
