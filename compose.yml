@@ -11,6 +11,9 @@ services:
       - --config.file=/etc/prometheus/prometheus.yml
   grafana:
     image: grafana/grafana-oss
+    environment:
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
     ports:
       - "3000:3000"
     volumes:
