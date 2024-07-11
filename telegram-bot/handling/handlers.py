@@ -126,7 +126,8 @@ async def failure_report_init(
     StateFilter(
         DialogStates.Authorized,
         DialogStates.Reporting,
-        DialogStates.ReportCommentAwaiting
+        DialogStates.ReportCommentAwaiting,
+        DialogStates.AlertManaging
     ), Command("menu")
 )
 async def interrupt_and_go_to_menu(msg: Message, state: FSMContext):
