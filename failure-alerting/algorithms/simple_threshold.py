@@ -20,7 +20,7 @@ class SimpleThreshold(FailureDetectionAlgorithm):
             self.__tz_shift, self.__time_interval
         )
         failures = list()
-        for failure, location, reports_cnt, commentary in reports_received:
+        for failure, location, failure_date, reports_cnt, commentary in reports_received:
             if reports_cnt < self.__threshold:
                 continue
             failures.append(
@@ -28,7 +28,8 @@ class SimpleThreshold(FailureDetectionAlgorithm):
                     failure,
                     location,
                     reports_cnt,
-                    commentary
+                    commentary,
+                    failure_date
                 )
             )
         return failures

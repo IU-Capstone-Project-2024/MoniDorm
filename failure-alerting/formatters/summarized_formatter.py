@@ -40,6 +40,6 @@ class SummarizedFormatter(SimpleFormatter):
             message += '\n\n' + response.choices[0].message.content
 
         return Alert(
-            f'{failure.location()}.{failure.failure()}',
+            failure,
             message
         )

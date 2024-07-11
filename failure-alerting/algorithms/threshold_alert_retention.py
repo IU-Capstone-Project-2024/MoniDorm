@@ -25,7 +25,7 @@ class ThresholdWithRetention(FailureDetectionAlgorithm):
             self.__tz_shift, self.__time_interval
         )
         failures = list()
-        for failure, location, reports_cnt, commentary in reports_received:
+        for failure, location, failure_date, reports_cnt, commentary in reports_received:
             if reports_cnt < self.__threshold:
                 continue
             src = (location, failure)
@@ -38,7 +38,8 @@ class ThresholdWithRetention(FailureDetectionAlgorithm):
                     failure,
                     location,
                     reports_cnt,
-                    commentary
+                    commentary,
+                    failure_date
                 )
             )
             self.__retented_failures[src] = datetime.datetime.now()

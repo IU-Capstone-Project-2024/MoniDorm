@@ -15,3 +15,5 @@ class DialogStates(StatesGroup):
     Reporting = State()
     # Awaiting report comment state
     ReportCommentAwaiting = State()
+    # Alerts managing state
+    AlertManaging = State()

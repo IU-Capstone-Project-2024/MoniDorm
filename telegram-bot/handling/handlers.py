@@ -100,7 +100,7 @@ async def failure_report_init(
         report_provider: ReportCallbackProvider,
         state: FSMContext
 ):
-    callback = report_provider.get_callback(1)
+    callback = report_provider.get_report_callback(1)
     user_data = await state.get_data()
 
     transition_path = callback.get_path()
@@ -113,7 +113,8 @@ async def failure_report_init(
     await dumb_msg.delete()
 
     await msg.answer(
-        'Report a failure or update preferences!',
+        text='Report a failure or update preferences!\n\n'
+             '<i>Please treat reports of outages responsibly.</i>',
         reply_markup=keyboard
     )
 
@@ -142,7 +143,7 @@ async def report_processing(
         report_provider: ReportCallbackProvider
 ):
     go_to = callback_data.window_id
-    callback = report_provider.get_callback(go_to)
+    callback = report_provider.get_report_callback(go_to)
     user_data = await state.get_data()
     if isinstance(callback, CancelCallback):
         await query.message.reply(text="You are at the main menu now 😊",
@@ -180,11 +181,11 @@ async def alerts_status_switch(
     user_data = await state.get_data()
     if callback_data.enable:
         user_data['alerts'].append(callback_data.path)
-        keyboard = report_provider.get_callback(callback_data.window_id).keyboard(True)
+        keyboard = report_provider.get_report_callback(callback_data.window_id).keyboard(True)
         await query.answer('Alerts enabled')
     else:
         user_data['alerts'].remove(callback_data.path)
-        keyboard = report_provider.get_callback(callback_data.window_id).keyboard(False)
+        keyboard = report_provider.get_report_callback(callback_data.window_id).keyboard(False)
         await query.answer('Alerts disabled')
 
     await state.set_data(user_data)
@@ -255,7 +256,7 @@ async def report_processing(
         report_provider: ReportCallbackProvider
 ):
     go_to = callback_data.back_window
-    callback = report_provider.get_callback(go_to)
+    callback = report_provider.get_report_callback(go_to)
     user_data = await state.get_data()
 
     transition_path = callback.get_path()
@@ -264,7 +265,8 @@ async def report_processing(
     else:
         keyboard = callback.keyboard(True)
     await query.message.edit_text(
-        text='Report a failure or update preferences!',
+        text='Report a failure or update preferences!\n\n'
+             '<i>Please treat reports of outages responsibly.</i>',
         reply_markup=keyboard
     )
     await state.set_state(DialogStates.Reporting)
@@ -276,17 +278,72 @@ async def show_subscribed_alerts(
         state: FSMContext,
         report_provider: ReportCallbackProvider
 ):
+    try:
+        await msg.delete()
+    except TelegramBadRequest:
+        pass
     user_alerts = (await state.get_data())['alerts']
     if len(user_alerts) == 0:
         answer = ("You don't have any active failure alerts subscriptions. "
                   "You can enable them in the reporting stage")
-    else:
-        alerts = list()
-        for alert in user_alerts:
-            alerts.append("> " + ', '.join(report_provider.get_human_readable_path_en(alert)))
-        alerts.sort()
-        answer = f"<b>Your alerts here</b>\n\n{'\n'.join(alerts)}"
-    await msg.answer(text=answer)
+        await msg.answer(text=answer)
+        return
+
+    dumb_msg = await msg.answer('.', reply_markup=ReplyKeyboardRemove())
+    await dumb_msg.delete()
+
+    user_alerts.sort()
+    keyboard = report_provider.get_alert_callback(user_alerts).as_markup()
+    await msg.answer(
+        text="You can unsubscribe from your alerts",
+        reply_markup=keyboard
+    )
+    await state.set_state(DialogStates.AlertManaging)
+
+
+@router.callback_query(
+    StateFilter(DialogStates.AlertManaging),
+    report_callbacks.AlertUnsubscribeCallback.filter(
+        F.back == True
+    )
+)
+async def return_to_menu(
+        query: CallbackQuery,
+        state: FSMContext,
+):
+    await query.answer(text="Returning back")
+    await query.message.reply(text="You are at the main menu now 😊",
+                              reply_markup=all_callbacks.get_main_menu_kb())
+    await query.message.delete()
+    await state.set_state(DialogStates.Authorized)
+
+
+@router.callback_query(
+    StateFilter(DialogStates.AlertManaging),
+    report_callbacks.AlertUnsubscribeCallback.filter(
+        F.back == False
+    )
+)
+async def alert_unsub(
+        query: CallbackQuery,
+        callback_data: report_callbacks.AlertUnsubscribeCallback,
+        state: FSMContext,
+        report_provider: ReportCallbackProvider
+):
+    await query.answer("Unsubscribing...")
+    alert_to_unsub = callback_data.alert
+    user_alerts = (await state.get_data())["alerts"]
+    user_alerts.sort()
+    try:
+        user_alerts.remove(alert_to_unsub)
+    except ValueError:
+        pass
+    await state.update_data(
+        alerts=user_alerts
+    )
+
+    new_keyboard = report_provider.get_alert_callback(user_alerts).as_markup()
+    await query.message.edit_reply_markup(reply_markup=new_keyboard)
 
 
 @router.callback_query(lambda _: True)

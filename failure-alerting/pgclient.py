@@ -1,4 +1,5 @@
 import psycopg2
+from typing import List
 
 
 class PostgresClient:
@@ -17,6 +18,7 @@ class PostgresClient:
             select
                 category,
                 placement,
+                min(failure_date),
                 count(*) as reports_count,
                 string_agg(description, ',') as full_desctiption
             from
@@ -30,6 +32,16 @@ class PostgresClient:
         rows = self.__cur.fetchall()
         self.__conn.rollback()
         return rows
+
+    def insert_recent_alerted_failures(self, unwrapped_failures: List):
+        for f in unwrapped_failures:
+            self.__cur.execute('''
+                insert into failure
+                (category, placement, failure_date, report_count, aggregated_report_messages, summarization)
+                values (%s, %s, %s, %s, %s, %s)
+            ''', f
+        )
+        self.__cur.connection.commit()
 
     def __del__(self):
         self.__cur.close()

@@ -83,6 +83,11 @@ class CancelCallback(ReportCallback):
         pass
 
 
+class AlertUnsubscribeCallback(CallbackData, prefix="alert_unsub"):
+    back: bool
+    alert: str
+
+
 class ReportCallbackProvider:
     def __init__(self, path_to_schemas: str):
         with open(path_to_schemas, 'r') as f:
@@ -140,7 +145,7 @@ class ReportCallbackProvider:
 
         __dfs(self.__schemas, 0, list())
 
-    def get_callback(self, callback_id):
+    def get_report_callback(self, callback_id):
         return self.__callbacks[callback_id]
 
     def get_human_readable_path_en(self, path: str) -> List[str]:
@@ -155,3 +160,23 @@ class ReportCallbackProvider:
                     human_readable.append(node["name"]["en"])
                     break
         return human_readable
+
+    def get_alert_callback(self, enabled_alerts: List[str]) -> InlineKeyboardBuilder:
+        builder = InlineKeyboardBuilder()
+        for alert in enabled_alerts:
+            builder.button(
+                text=f"❌ {', '.join(self.get_human_readable_path_en(alert))}",
+                callback_data=AlertUnsubscribeCallback(
+                    back=False,
+                    alert=alert
+                )
+            )
+        builder.button(
+            text="👈 Back",
+            callback_data=AlertUnsubscribeCallback(
+                back=True,
+                alert=""
+            )
+        )
+        builder.adjust(1)
+        return builder

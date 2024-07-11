@@ -46,7 +46,7 @@ class SimpleFormatter(AlertFormatter):
         message = f'🔔 Reports are coming in about possible problems with {failure_human}' \
                   f' at {', '.join(location_human)}. There are {failure.reports_count()} of them at this moment.'
         return Alert(
-            f'{failure.location()}.{failure.failure()}',
+            failure,
             message
         )
 
