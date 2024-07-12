@@ -14,7 +14,7 @@ public class WebCORSConfiguration {
             @Override
             public void addCorsMappings(@NotNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                    .allowedOrigins("*")
+                    .allowedOriginPatterns("*")
                     .allowCredentials(true)
                     .allowedMethods("*")
                     .allowedHeaders("*")
