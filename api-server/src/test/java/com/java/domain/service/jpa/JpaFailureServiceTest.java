@@ -101,8 +101,23 @@ public class JpaFailureServiceTest extends IntegrationEnvironment {
             .get()).asList().containsOnly(failure_1, failure_2);
         assertThat(failureService.getAllFailuresByDateWindows(FAILURE_DATE.plusHours(1), null).get()).asList()
             .isEmpty();
+    }
 
-        failureRepository.deleteAll();
-        failureRepository.flush();
+    @Test
+    @Transactional
+    @Rollback(false)
+    @Order(4)
+    void givenFullDB_whenDeleteAllReportOneByOne_thenEmptyDB() {
+        var failures = failureService.getAllFailures().orElseThrow();
+
+        var isDeletedList = failures.stream()
+            .map(failure -> failureService.deleteFailure(failure.getId()))
+            .toList();
+
+        assertThat(isDeletedList).asList().containsOnly(true);
+        assertThat(failureService.getAllFailures().get()).asList().isEmpty();
+        assertThat(failureService.getAllFailuresByPlacement("placement").get()).asList().isEmpty();
+        assertThat(failureService.getAllFailuresByCategory("category").get()).asList().isEmpty();
+        assertThat(failureService.getAllFailuresByDateWindows(null, null).get()).asList().isEmpty();
     }
 }

@@ -4,6 +4,7 @@ import com.java.api.exception.NotFoundException;
 import com.java.api.model.PostProcessReportRequest;
 import com.java.api.model.PostProcessReportResponse;
 import com.java.domain.model.Report;
+import com.java.domain.service.FailureService;
 import com.java.domain.service.ReportService;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Log4j2
 public class AdminPanelController implements AdminPanelAPI {
     private final ReportService reportService;
+    private final FailureService failureService;
 
     @Override
     public ResponseEntity<Void> confirmReport(long reportId) {
@@ -94,5 +96,15 @@ public class AdminPanelController implements AdminPanelAPI {
 
         return ResponseEntity.ok().build();
     }
-}
 
+    @Override
+    public ResponseEntity<Void> deleteFailure(long failureId) {
+        boolean isDeleted = failureService.deleteFailure(failureId);
+
+        if (!isDeleted) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok().build();
+    }
+}
