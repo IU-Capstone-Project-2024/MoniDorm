@@ -2,30 +2,28 @@ import React, { useState, useEffect } from 'react';
 import {Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
  
-const DrawerReports = () => {
+const DrawerFailures = () => {
   const location = useLocation();
   const [reports, setReports] = useState([]);
 
   useEffect(() => {
-    fetch('http://10.90.137.18:8080/api/report/all', {
-      headers: {
-        'Token': 'token',
-      }})
-      .then(response => {
-        if (!response.ok) {   
-          throw new Error('Network response was not ok');
+    axios.get('http://10.90.137.18:8080/api/failure/all', {
+        headers: {
+          'Token': 'token',
         }
-        return response.json();
       })
-      .then(data => setReports(data.responses)) // Update state with fetched reports
-      .catch(error => console.error('Error fetching reports:', error));
-  }, []);
+      .then(response => {
+        // Axios automatically parses the JSON, so no need to call .json()
+        setReports(response.data.responses); // Update state with fetched reports
+      })
+      .catch(error => console.error('Error fetching reports:', error)); // Step 4: Error Handling
+    }, []);
 
   const handleDelete = (id) => {
-    fetch('http://10.90.137.18:8080/api/admin?report_id=${id}', {
+    fetch(`http://10.90.137.18:8080/api/admin?report_id=${id}`, {
       method: 'DELETE',
       headers: {
-        'Token': 'token',
+        'Token': 'dsa',
       }})
       .then(response => {
         if (!response.ok) {   
@@ -132,7 +130,7 @@ const DrawerReports = () => {
 </svg><div className='pl-2'>Reports</div></Link></li>
 <li className={`font-medium text-xl py-3 ${isActive('failures') ? 'text-blue' : 'text-grey'}`}><Link to="/failures">
 <svg className='ml-0s' width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="17.5" cy="17.5" r="16.5" transform="rotate(180 17.5 17.5)" stroke="#B1B1B1" stroke-width="2.7" />
+  <circle cx="17.5" cy="17.5" r="16.5" transform="rotate(180 17.5 17.5)" stroke={`${isActive('failures') ? 'blue' : 'grey'}`} stroke-width="2.5" />
   <path d="M17.399 24.351C17.7309 24.683 18.2691 24.683 18.601 24.351L24.0104 18.9417C24.3424 18.6097 24.3424 18.0715 24.0104 17.7396C23.6785 17.4076 23.1403 17.4076 22.8083 17.7396L18 22.5479L13.1917 17.7396C12.8597 17.4076 12.3215 17.4076 11.9896 17.7396C11.6576 18.0715 11.6576 18.6097 11.9896 18.9417L17.399 24.351ZM17.15 10L17.15 23.75L18.85 23.75L18.85 10L17.15 10Z" fill={isActive('failures') ? '#1814F3' : '#B1B1B1'} />
 </svg><div className='pl-2'>Failures</div></Link></li>
     <li className={`font-medium text-xl py-3 ${isActive('settings') ? 'text-blue' : 'text-grey'}`}><Link to="/settings"><svg width="31" height="28" viewBox="0 0 31 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -143,4 +141,4 @@ const DrawerReports = () => {
 </div>
     );
 }
-export default DrawerReports;
+export default DrawerFailures;

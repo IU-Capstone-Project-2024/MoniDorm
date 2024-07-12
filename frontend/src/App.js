@@ -4,6 +4,7 @@ import Drawer from './components/Drawer';
 import Home from './pages/Home';
 import Administrators from './pages/Administrators';
 import Reports from './pages/Reports';
+import Failures from './pages/Failures';
 import Settings from './pages/Settings';
 import {
     BrowserRouter as Router,
@@ -22,6 +23,7 @@ function App() {
 					<Route path="/dashboard" element={<Home />} />
 					<Route path="/administrators" element={<Administrators />} />
 					<Route path="/reports" element={<Reports />} />
+					<Route path="/failures" element={<Failures />} />
 					<Route path="/settings" element={<Settings />} />
 				</Routes>
 			</div>
