@@ -3,10 +3,10 @@ package com.java.api;
 import com.java.api.model.PostProcessReportRequest;
 import com.java.api.model.PostProcessReportResponse;
 import com.java.domain.model.Report;
+import com.java.domain.service.FailureService;
 import com.java.domain.service.ReportService;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -33,6 +33,9 @@ class AdminPanelControllerTest {
 
     @MockBean
     private ReportService reportService;
+
+    @MockBean
+    private FailureService failureService;
 
     @Test
     void givenReportId_whenReportNotExists_thenNotFoundException() {
@@ -166,8 +169,8 @@ class AdminPanelControllerTest {
         final long id = 1L;
         Mockito.when(reportService.deleteReport(id)).thenReturn(false);
 
-        webTestClient.delete()
-            .uri("/api/admin", Map.of("report_id", id))
+        webTestClient.patch()
+            .uri(uriBuilder -> uriBuilder.queryParam("report_id", id).path("/api/admin/report").build())
             .header(COMMON_AUTHORIZATION_HEADER_NAME, COMMON_HEADER_VALUE)
             .exchange()
             .expectStatus()
@@ -179,8 +182,34 @@ class AdminPanelControllerTest {
         final long id = 1L;
         Mockito.when(reportService.deleteReport(id)).thenReturn(true);
 
-        webTestClient.delete()
-            .uri(uriBuilder -> uriBuilder.queryParam("report_id", id).path("/api/admin").build())
+        webTestClient.patch()
+            .uri(uriBuilder -> uriBuilder.queryParam("report_id", id).path("/api/admin/report").build())
+            .header(COMMON_AUTHORIZATION_HEADER_NAME, COMMON_HEADER_VALUE)
+            .exchange()
+            .expectStatus()
+            .isOk();
+    }
+
+    @Test
+    void givenFailureId_whenReportNotExists_thenBadRequest() {
+        final long id = 1L;
+        Mockito.when(failureService.deleteFailure(id)).thenReturn(false);
+
+        webTestClient.patch()
+            .uri(uriBuilder -> uriBuilder.queryParam("failure_id", id).path("/api/admin/failure").build())
+            .header(COMMON_AUTHORIZATION_HEADER_NAME, COMMON_HEADER_VALUE)
+            .exchange()
+            .expectStatus()
+            .isBadRequest();
+    }
+
+    @Test
+    void givenFailureId_whenReportExists_thenOk() {
+        final long id = 1L;
+        Mockito.when(failureService.deleteFailure(id)).thenReturn(true);
+
+        webTestClient.patch()
+            .uri(uriBuilder -> uriBuilder.queryParam("failure_id", id).path("/api/admin/failure").build())
             .header(COMMON_AUTHORIZATION_HEADER_NAME, COMMON_HEADER_VALUE)
             .exchange()
             .expectStatus()
