@@ -3,7 +3,7 @@ services:
     image: postgres:16
     ports:
       - "5432:5432"
-    env_file: ./api-server/.env
+    env_file: ./.env
     networks:
       - backend
     volumes:
@@ -13,7 +13,7 @@ services:
     depends_on:
       - postgresql
     env_file:
-      - ./api-server/.env
+      - ./.env
     command:
       - --changelog-file=db.master-changelog.xml
       - --driver=org.postgresql.Driver
@@ -36,7 +36,7 @@ services:
     networks:
       - backend
     env_file:
-      - ./api-server/.env
+      - ./.env
     depends_on:
       - postgresql
       - liquibase
