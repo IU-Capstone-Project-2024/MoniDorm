@@ -1,77 +1,164 @@
 import React, { useState, useEffect } from 'react';
 import {Link, useLocation } from 'react-router-dom';
-import axios from 'axios';
  
 const DrawerReports = () => {
   const location = useLocation();
   const [reports, setReports] = useState([]);
+  const [reportCount, setReportCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [showUpdateAlert, setShowUpdateAlert] = useState(false);
+  const reportsPerPage = 15;
 
-  useEffect(() => {
-    fetch('http://10.90.137.18:8080/api/report/all', {
-      headers: {
-        'Token': 'token',
-      }})
-      .then(response => {
-        if (!response.ok) {   
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => setReports(data.responses)) // Update state with fetched reports
-      .catch(error => console.error('Error fetching reports:', error));
-  }, []);
+  const pageCount = Math.ceil(reports.length / reportsPerPage);
 
-  const handleDelete = (id) => {
-    fetch('http://10.90.137.18:8080/api/admin?report_id=${id}', {
-      method: 'DELETE',
-      headers: {
-        'Token': 'token',
-      }})
-      .then(response => {
-        if (!response.ok) {   
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => setReports(data.responses)) // Update state with fetched reports
-      .catch(error => console.error('Error deleting report', error));
+  const indexOfLastReport = currentPage * reportsPerPage;
+  const indexOfFirstReport = indexOfLastReport - reportsPerPage;
+  const currentReports = reports.slice(indexOfFirstReport, indexOfLastReport);
+
+  const handlePageChange = (event) => {
+    setCurrentPage(Number(event.target.getAttribute('aria-label')));
   };
 
-  // Function to determine if the link is active based on the current location
+  useEffect(() => {
+    const fetchReports = () => {
+      fetch('http://10.90.137.18:8080/api/report/all', {
+        headers: {
+          'Token': 'token',
+        },
+      })
+      .then(response => {
+        if (!response.ok) {   
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        const newReports = data.responses;
+        if (newReports.length > reportCount && !isFirstLoad) {
+          setShowUpdateAlert(true); // Show the HTML alert instead of browser alert
+        } else if (isFirstLoad) {
+          setIsFirstLoad(false); // Update the flag after the first load
+        }
+        setReportCount(newReports.length);
+        setReports(newReports); // Update state with fetched reports
+      })
+      .catch(error => console.error('Error fetching reports:', error));
+    };
+
+    fetchReports();
+    const intervalId = setInterval(fetchReports, 10000); // Fetch every 10 seconds
+
+    return () => clearInterval(intervalId); // Cleanup on component unmount
+  }, [reportCount, isFirstLoad]);
+
+  const handleDelete = (id, index) => {
+    fetch(`http://10.90.137.18:8080/api/admin/report?report_id=${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Token': 'token',
+      },
+    })
+    .then(response => {
+      if (response.ok && response.headers.get("Content-Type")?.includes("application/json")) {
+        return response.json();
+      } else if (response.ok) {
+        return null; // No content to parse, but request was successful
+      } else {
+        throw new Error('Failed to delete the report');
+      }
+    })
+    .then(() => {
+      setReports(currentReports => currentReports.filter(report => report.id !== id));
+      document.getElementById(`my_modal_${index}`).close();
+    })
+    .catch(error => console.error('Error deleting erport:', error));
+  };
+  function formatPlacement(placement) {
+    const parts = placement.split('.');
+    let dormNumber = parts[1];
+    let floorNumber = parts[2];
+
+    dormNumber = dormNumber.substring(1);
+    if (floorNumber) {
+      floorNumber = floorNumber.substring(1);
+    }
+  
+    if (!floorNumber) {
+      return `Dorm ${dormNumber}`;
+    }
+    return `Dorm ${dormNumber}, Floor ${floorNumber}`;
+  }
+
   const isActive = (path) => location.pathname.includes(path);
     return (
         <div className="drawer lg:drawer-open">
+          {showUpdateAlert && (
+        <div role="alert" class="alert alert-info">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            class="h-6 w-6 shrink-0 stroke-current">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span>New software update available.</span>
+        </div>
+      )}
   <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-  <div className="drawer-content flex flex-col items-center justify-center">
-  <div className="overflow-x-auto">
-  <table className="table">
+  <div className="drawer-content flex flex-col items-center justify-center bg-gray-100">
+  <div className="overflow-x-auto" style={{ transform: 'translateY(-60px)' }}>
+  <table className="table bg-white">
     {/* head */}
-    <thead>
+    <thead className='text-center'>
       <tr>
-        <th>Label</th>
-        <th>Dorm</th>
-        <th>Description</th>
-        <th>Floor</th>
-        <th>Date</th>
-        <th>Info</th>
+      <th className="border-r">Label</th>
+      <th className="border-r">Dorm</th>
+      <th className="border-r">Description</th>
+      <th className="border-r">Date</th>
+      <th>Info</th>
       </tr>
     </thead>
     <tbody>
       {reports.map((report, index) => (
-        <tr key={index}>
-        <td>{report.category}</td>
-        <td>{report.placement}</td>
-        <td>{report.description}</td>
-        <td>{report.floor}</td>
-        <td>{report.failure_date}</td>
+        <tr key={index} className="border-t">
+        <td className='text-center border-r'>{report.category}</td>
+        <td className='text-center border-r'>{formatPlacement(report.placement)}</td>
+        <td className="border-r">{report.description}</td>
+        <td className='text-center border-r'>{
+          new Date(report.failure_date).toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false 
+          }).replace(/(\d+)\/(\d+)\/(\d+),/, '$2/$1/$3,')
+        }</td>
         <td><button className="btn btn-outline hover btn-primary w-24" onClick={()=>document.getElementById(`my_modal_${index}`).showModal()}>View</button>
         <dialog id={`my_modal_${index}`} className="modal">
           <div className="modal-box">
           <h3 className="font-bold text-lg">Report ID: {report.id}</h3>
-          <p className="py-4">{report.description}</p>
-          <p className="py-4">some text and buttons</p>
+          <p className="py-4 font-semibold">Description: {report.description}</p>
+          <p className="py-1 font-semibold">Placement: {formatPlacement(report.placement)}</p>
+          <p className="py-1 font-semibold">Categoty: {report.category}</p>
+          <p className="py-1 font-semibold">Sender: {report.owner_email}</p>
+          <p className="py-1 font-semibold">Date: {new Date(report.failure_date).toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false 
+          }).replace(/(\d+)\/(\d+)\/(\d+),/, '$2/$1/$3,')}</p>
           <div className="modal-action">
-            <button className="btn btn-error text-white" onClick={handleDelete(report.id)}>Delete</button>
+          <button className='btn btn-error text-white' onClick={() => handleDelete(report.id, index)}>Delete</button>
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
               <button className="btn">Close</ button>
@@ -85,6 +172,19 @@ const DrawerReports = () => {
         ))}
     </tbody>
   </table>
+  <div className="join flex justify-center py-8">
+        {Array.from({ length: pageCount }, (_, i) => (
+          <input
+            key={i + 1}
+            className="join-item btn btn-square"
+            type="radio"
+            name="options"
+            aria-label={i + 1}
+            checked={currentPage === i + 1}
+            onChange={handlePageChange}
+          />
+        ))}
+      </div>
 </div>
     <label htmlFor="my-drawer-2" className="btn btn-primary drawer-button lg:hidden">
       Open drawer

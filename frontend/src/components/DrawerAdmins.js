@@ -1,17 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {Link, useLocation } from 'react-router-dom';
  
 const Drawer = () => {
   const location = useLocation();
+  const [admins, setAdmins] = useState([]);
+
+  useEffect(() => {
+    fetch('http://10.90.137.18:8080/api/report/all', {
+      headers: {
+        'Token': 'token',
+      }})
+      .then(response => {
+        if (!response.ok) {   
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => setAdmins(data.responses)) // Update state with fetched reports
+      .catch(error => console.error('Error fetching reports:', error));
+  }, []);
+    
 
   // Function to determine if the link is active based on the current location
   const isActive = (path) => location.pathname.includes(path);
     return (
         <div className="drawer lg:drawer-open">
   <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-  <div className="drawer-content flex flex-col items-center justify-center">
+  <div className="drawer-content flex flex-col items-center justify-center bg-gray-100">
   <div className="overflow-x-auto">
-  <table className="table">
+  <table className="table bg-white">
     {/* head */}
     <thead>
       <tr>
@@ -22,27 +39,34 @@ const Drawer = () => {
       </tr>
     </thead>
     <tbody>
-      {/* row 1 */}
-      <tr className='hover'>
-        <th>John Doe</th>
-        <td>7</td>  
-        <td>Dorm Admin</td>
-        <td><button className="btn btn-outline btn-primary w-24">View</button></td>
+    {admins.map((admin, index) => (
+      <tr key={index} className="border-t">
+      <td className='hover'>
+        <td>{admin.name}</td>
+        <td>{admin.dorm}</td>  
+        <td>{admin.role}</td>
+        <td><button className="btn btn-outline btn-primary w-24" onClick={()=>document.getElementById(`my_modal_${index}`).showModal()}>View</button>
+      </td>
+      <dialog id={`my_modal_${index}`} className="modal">
+          <div className="modal-box">
+          <h3 className="font-bold text-lg">Admin ID: {admin.id}</h3>
+          <p className="py-4 font-semibold">Name: {admin.name}</p>
+          <p className="py-4 font-semibold">Role: {admin.role}</p>
+          <p className="py-4 font-semibold">Dorm: {admin.dorm}</p>
+          <p className="py-1 font-semibold">Telegram: {admin.telegram}</p>
+          <p className="py-1 font-semibold">Phone number: {admin.phone}</p>
+          <p className="py-1 font-semibold">Email: {admin.owner_email}</p>
+          <div className="modal-action"> 
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">Close</ button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+      </td>
       </tr>
-      {/* row 2 */}
-      <tr className="hover">
-        <th>name</th>
-        <td>5</td>  
-        <td>Dorm Admin</td>
-        <td><button className="btn btn-outline btn-primary w-24">View</button></td>
-      </tr>
-      {/* row 3 */}
-      <tr>
-        <th>name</th>
-        <td>7</td>  
-        <td>Repairer</td>
-        <td><button className="btn btn-outline btn-primary w-24">View</button></td>
-      </tr>
+    ))}
     </tbody>
   </table>
 </div>

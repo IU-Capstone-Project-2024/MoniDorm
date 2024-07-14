@@ -4,72 +4,158 @@ import axios from 'axios';
  
 const DrawerFailures = () => {
   const location = useLocation();
-  const [reports, setReports] = useState([]);
+  const [failures, setFailures] = useState([])
+  const [failureCount, setFailureCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [showUpdateAlert, setShowUpdateAlert] = useState(false);
+  const failuresPerPage = 15;
+
+  const pageCount = Math.ceil(failures.length / failuresPerPage);
+
+  // Slice reports for the current page
+  const indexOfLastReport = currentPage * failuresPerPage;
+  const indexOfFirstReport = indexOfLastReport - failuresPerPage;
+  const currentFailures = failures.slice(indexOfFirstReport, indexOfLastReport);
+
+  // Handle page change
+  const handlePageChange = (event) => {
+    setCurrentPage(Number(event.target.getAttribute('aria-label')));
+  };
 
   useEffect(() => {
-    axios.get('http://10.90.137.18:8080/api/failure/all', {
+    const fetchFailures = () => {
+      fetch('http://10.90.137.18:8080/api/failure/all', {
         headers: {
           'Token': 'token',
-        }
+        },
       })
-      .then(response => {
-        // Axios automatically parses the JSON, so no need to call .json()
-        setReports(response.data.responses); // Update state with fetched reports
-      })
-      .catch(error => console.error('Error fetching reports:', error)); // Step 4: Error Handling
-    }, []);
-
-  const handleDelete = (id) => {
-    fetch(`http://10.90.137.18:8080/api/admin?report_id=${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Token': 'dsa',
-      }})
       .then(response => {
         if (!response.ok) {   
           throw new Error('Network response was not ok');
         }
         return response.json();
       })
-      .then(data => setReports(data.responses)) // Update state with fetched reports
-      .catch(error => console.error('Error deleting report', error));
+      .then(data => {
+        const newFailures = data.responses;
+        if (newFailures.length > failureCount && !isFirstLoad) {
+          setShowUpdateAlert(true); // Show the HTML alert instead of browser alert
+        } else if (isFirstLoad) {
+          setIsFirstLoad(false); // Update the flag after the first load
+        }
+        setFailureCount(newFailures.length);
+        setFailures(newFailures); // Update state with fetched reports
+      })
+      .catch(error => console.error('Error fetching reports:', error));
+    };
+
+    fetchFailures();
+    const intervalId = setInterval(fetchFailures, 10000); // Fetch every 10 seconds
+
+    return () => clearInterval(intervalId); // Cleanup on component unmount
+  }, [failureCount, isFirstLoad]);
+
+  const handleDelete = (id, index) => {
+    fetch(`http://10.90.137.18:8080/api/admin/failure?failure_id=${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Token': 'token',
+      },
+    })
+    .then(response => {
+      if (response.ok && response.headers.get("Content-Type")?.includes("application/json")) {
+        return response.json();
+      } else if (response.ok) {
+        return null; // No content to parse, but request was successful
+      } else {
+        throw new Error('Failed to delete the failure');
+      }
+    })
+    .then(() => {
+      setFailures(currentReports => currentReports.filter(report => report.id !== id));
+      document.getElementById(`my_modal_${index}`).close();
+    })
+    .catch(error => console.error('Error deleting failure:', error));
   };
+
+  function extractSummary(summary) {
+    const lastPeriodIndex = summary.lastIndexOf('. ');
+    const extractedSummary = summary.substring(lastPeriodIndex + 38);
+    return extractedSummary;
+  }
+
+  function formatPlacement(placement) {
+    const parts = placement.split('.');
+    let dormNumber = parts[1];
+    let floorNumber = parts[2];
+
+    dormNumber = dormNumber.substring(1);
+    if (floorNumber) {
+      floorNumber = floorNumber.substring(1);
+    }
+  
+    if (!floorNumber) {
+      return `Dorm ${dormNumber}`;
+    }
+    return `Dorm ${dormNumber}, Floor ${floorNumber}`;
+  }
 
   // Function to determine if the link is active based on the current location
   const isActive = (path) => location.pathname.includes(path);
     return (
-        <div className="drawer lg:drawer-open">
-  <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-  <div className="drawer-content flex flex-col items-center justify-center">
-  <div className="overflow-x-auto">
-  <table className="table">
+      <div className="drawer lg:drawer-open">
+      <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+      <div className="drawer-content flex flex-col items-center justify-center bg-gray-100">
+        <div className="overflow-x-auto" style={{ transform: 'translateY(-60px)' }}>
+          <table className="table bg-white" >
     {/* head */}
-    <thead>
+    <thead className='text-center'>
       <tr>
-        <th>Label</th>
-        <th>Dorm</th>
-        <th>Description</th>
-        <th>Floor</th>
-        <th>Date</th>
+        <th className="border-r">Label</th>
+        <th className="border-r">Dorm</th>
+        <th className="border-r">Summarization</th>
+        <th className="border-r">Count</th>
+        <th className="border-r">Date</th>
         <th>Info</th>
       </tr>
     </thead>
     <tbody>
-      {reports.map((report, index) => (
-        <tr key={index}>
-        <td>{report.category}</td>
-        <td>{report.placement}</td>
-        <td>{report.description}</td>
-        <td>{report.floor}</td>
-        <td>{report.failure_date}</td>
+      {failures.map((failure, index) => (
+        <tr key={index} className="border-t">
+        <td className='text-center border-r'>{failure.category}</td>
+        <td className='text- border-r'>{formatPlacement(failure.placement)}</td>
+        <td className='border-r'>{extractSummary(failure.summarization)}</td>
+        <td className='text-center border-r'>{failure.report_count}</td>
+        <td className='text-center border-r'>{
+          new Date(failure.failure_date).toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false 
+          }).replace(/(\d+)\/(\d+)\/(\d+),/, '$2/$1/$3,')
+        }</td>
         <td><button className="btn btn-outline hover btn-primary w-24" onClick={()=>document.getElementById(`my_modal_${index}`).showModal()}>View</button>
         <dialog id={`my_modal_${index}`} className="modal">
           <div className="modal-box">
-          <h3 className="font-bold text-lg">Report ID: {report.id}</h3>
-          <p className="py-4">{report.description}</p>
-          <p className="py-4">some text and buttons</p>
+          <h3 className="font-bold text-lg">Report ID: {failure.id}</h3>
+          <p className="py-4 font-semibold">Summary: {extractSummary(failure.summarization)}</p>
+          <p className="py-1 font-semibold">Placement: {formatPlacement(failure.placement)}</p>
+          <p className="py-1 font-semibold">Categoty: {failure.category}</p>
+          <p className="py-1 font-semibold">Count: {failure.report_count}</p>
+          <p className="py-1 font-semibold">Date: {new Date(failure.failure_date).toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false 
+          }).replace(/(\d+)\/(\d+)\/(\d+),/, '$2/$1/$3,')}</p>
           <div className="modal-action">
-            <button className="btn btn-error text-white" onClick={handleDelete(report.id)}>Delete</button>
+          <button className='btn btn-error text-white' onClick={() => handleDelete(failure.id, index)}>Delete</button>
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
               <button className="btn">Close</ button>
@@ -83,6 +169,19 @@ const DrawerFailures = () => {
         ))}
     </tbody>
   </table>
+  <div className="join flex justify-center py-8">
+        {Array.from({ length: pageCount }, (_, i) => (
+          <input
+            key={i + 1}
+            className="join-item btn btn-square"
+            type="radio"
+            name="options"
+            aria-label={i + 1}
+            checked={currentPage === i + 1}
+            onChange={handlePageChange}
+          />
+        ))}
+      </div>
 </div>
     <label htmlFor="my-drawer-2" className="btn btn-primary drawer-button lg:hidden">
       Open drawer
