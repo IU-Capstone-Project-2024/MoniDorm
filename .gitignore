@@ -1,0 +1,12 @@
+telegram-bot/handling/__pycache__
+telegram-bot/mail/__pycache__
+telegram-bot/reporting/__pycache__
+
+.idea/
+failure-alerting/__pycache__/
+failure-alerting/algorithms/__pycache__/
+failure-alerting/formatters/__pycache__/
+telegram-bot/__pycache__/
+
+**/.env
+**/.env.prod
