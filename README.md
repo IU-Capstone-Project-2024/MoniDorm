@@ -1,40 +1,28 @@
-## Guide for .env
+# MoniDorm ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/IU-Capstone-Project-2024/MoniDorm/monidorm.yml?style=for-the-badge) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-closed/IU-Capstone-Project-2024/MoniDorm?style=for-the-badge) ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr-closed/IU-Capstone-Project-2024/MoniDorm?style=for-the-badge)
 
-### BOT_TOKEN
 
-Register a new telegram bot at [@BotFather](https://t.me/BotFather) and paste API Key Token
 
-### EMAIL_ADDRESS
 
-Use a your google gmail account
+## Description
 
-### EMAIL_PASSWORD
+MoniDorm is a service for monitoring and sending reports in the dormitories of Innopolis University. It allows to report malfunctions and receive notifications of any system failures directly in Telegram.
 
-A regular password will not work. You need to registrate an app password. Follow this link https://myaccount.google.com/apppasswords
+## Services
 
-Registrate a new 16 symbol password and paste here
+MoniDorm consists of several microservices:
 
-### EMAIL_SMTP_HOST
+- Telegram bot, which acts as a client for users
+- API-server as a backend
+- Frontend for the adimn panel
 
-For gmail SMTP host is `smtp.gmail.com` Paste it as it is
+## Getting Started
 
-### EMAIL_CODE_EXPIRATION_MINS
+...
 
-Set any number of minutes. Recomended 5-10 mins
+## Team members
 
-### BOT_STORAGE_MONGO_URI
-
-Link to deployed MongoDB database. Default localhost is `mongodb://localhost:27017`
-
-For Docker, use `mongodb://ROOT_USERNAME:ROOT_PASSWORD@mongo:27017/`
-
-### API_TOKEN
-
-API Token for server that processes reports. In our case this is token for Java server
-
-### API_URL
-
-URL for API server
-
-## How to run in Docker?
-```docker-compose up --build```
+- [Evgeny Bobkunov](https://github.com/cuprum-acid)
+- [Matvey Korinenko](https://github.com/m0t9)
+- [Artur Mukhutdinov](https://github.com/CatOrLeader)
+- [Daniil Prostiruk](https://github.com/dprostiruk)
+- [Rufina Gafiiatullina](https://github.com/Rufina2323)
