@@ -26,4 +26,3 @@ MoniDorm consists of several microservices:
 - [Artur Mukhutdinov](https://github.com/CatOrLeader)
 - [Daniil Prostiruk](https://github.com/dprostiruk)
 - [Rufina Gafiiatullina](https://github.com/Rufina2323)
-

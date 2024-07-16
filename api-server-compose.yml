@@ -1,0 +1,50 @@
+services:
+  postgresql:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    env_file: ./.env
+    networks:
+      - backend
+    volumes:
+      - postgresql:/var/lib/postgresql/data
+  liquibase:
+    image: liquibase/liquibase:4.25
+    depends_on:
+      - postgresql
+    env_file:
+      - ./.env
+    command:
+      - --changelog-file=db.master-changelog.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql:5432/${POSTGRES_DB}
+      - --username=${POSTGRES_USER}
+      - --password=${POSTGRES_PASSWORD}
+      - update
+    volumes:
+      - ./api-server/db/migrations:/liquibase/changelog
+    networks:
+      - backend
+  monidorm:
+    build:
+      dockerfile: ./api-server/Dockerfile
+      context: .
+      pull: false
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    networks:
+      - backend
+    env_file:
+      - ./.env
+    depends_on:
+      - postgresql
+      - liquibase
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  postgresql: { }
+
+networks:
+  backend: { }
