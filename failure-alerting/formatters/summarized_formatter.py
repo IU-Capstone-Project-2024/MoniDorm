@@ -32,7 +32,7 @@ class SummarizedFormatter(SimpleFormatter):
                     ChatMessage(
                         role="user",
                         content=f'''Task: Summarize the text consisting of the comma-separated statements
-                                    provided by different people about dorm technical problems in {failure.location()}.
+                                    provided by different people about dorm technical problems in {location_human}.
                                     Input: {failure.description()}
                                     Instructions:
                                     - Focus on capturing the main ideas and key arguments presented in the text.
