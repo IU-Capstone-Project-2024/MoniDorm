@@ -31,9 +31,19 @@ class SummarizedFormatter(SimpleFormatter):
                 messages=[
                     ChatMessage(
                         role="user",
-                        content=f'Summarize following text.'
-                                f'Do not provide any additional info except summarization '
-                                f'of following sentences. {failure.description()}'
+                        content=f'''Task: Summarize the text consisting of the comma-separated statements provided by
+                                    different people about dorm technical problems of {failure_human} in {location_human}.
+                                    Input: {failure.description()}
+                                    Instructions:
+                                    - Focus on capturing the main ideas and key arguments presented in the text.
+                                    - Extract the information that is strongly related to the outages.
+                                    - Provide a concise summary in your own words.
+                                    - Structure the summary into main problem, specific details.
+                                    - Ensure coherence and clarity in the summary.
+                                    - Use formal language and maintain a neutral tone.
+                                    - Avoid including personal opinions or interpretations.
+                                    - Avoid inappropriate language or content.
+                                    Length: 10-50 words.'''
                     )
                 ]
             )
