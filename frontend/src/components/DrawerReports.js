@@ -1,28 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import {Link, useLocation } from 'react-router-dom';
+import {Link, useLocation } from 'react-router-dom';  
  
 const DrawerReports = () => {
   const location = useLocation();
+  const [selectedCategory, setSelectedCategory] = useState('all');
   const [reports, setReports] = useState([]);
   const [reportCount, setReportCount] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [showUpdateAlert, setShowUpdateAlert] = useState(false);
-  const reportsPerPage = 15;
-
-  const pageCount = Math.ceil(reports.length / reportsPerPage);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const reportsPerPage = 7;
+  const totalPages = Math.ceil(reportCount / reportsPerPage);
+  
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  
   const indexOfLastReport = currentPage * reportsPerPage;
   const indexOfFirstReport = indexOfLastReport - reportsPerPage;
-  const currentReports = reports.slice(indexOfFirstReport, indexOfLastReport);
 
-  const handlePageChange = (event) => {
-    setCurrentPage(Number(event.target.getAttribute('aria-label')));
-  };
+  // Assuming you have a state for selectedOption and a function to handle its change
+const [selectedOption, setSelectedOption] = useState('all');
+
+// Function to filter reports based on the selected category
+const filteredReports = reports.filter(report => selectedOption === 'all' || report.category === selectedOption).slice(indexOfFirstReport, indexOfLastReport);
+
 
   useEffect(() => {
     const fetchReports = () => {
-      fetch('http://10.90.137.18:8080/api/report/all', {
+      let url = 'http://10.90.137.18:8080/api/report/all';
+      if (selectedCategory !== 'all') {
+        url = `http://10.90.137.18:8080/api/report/allByCategory?category=${selectedCategory}`;
+      }
+      fetch(url, {
         headers: {
           'Token': 'token',
         },
@@ -50,7 +58,12 @@ const DrawerReports = () => {
     const intervalId = setInterval(fetchReports, 10000); // Fetch every 10 seconds
 
     return () => clearInterval(intervalId); // Cleanup on component unmount
-  }, [reportCount, isFirstLoad]);
+  }, [reportCount, isFirstLoad, selectedCategory]);
+
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+    setCurrentPage(1); // Reset to first page whenever the category changes
+  };
 
   const handleDelete = (id, index) => {
     fetch(`http://10.90.137.18:8080/api/admin/report?report_id=${id}`, {
@@ -93,42 +106,35 @@ const DrawerReports = () => {
   const isActive = (path) => location.pathname.includes(path);
     return (
         <div className="drawer lg:drawer-open">
-          {showUpdateAlert && (
-        <div role="alert" class="alert alert-info">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            class="h-6 w-6 shrink-0 stroke-current">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
-          <span>New software update available.</span>
-        </div>
-      )}
   <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
   <div className="drawer-content flex flex-col items-center justify-center bg-gray-100">
-  <div className="overflow-x-auto" style={{ transform: 'translateY(-60px)' }}>
+  <div className="overflow-x-auto">
+    <div className='py-4'>
+    <select onChange={handleCategoryChange} className="select select-bordered max-w-xs" value={selectedCategory}>
+      <option disabled value="">Category</option>
+      <option value="all">All</option>
+      <option value="water">Water</option>
+      <option value="elevator">Elevator</option>
+      <option value="electricity">Electricity</option>
+    </select>
+    </div>
   <table className="table bg-white">
     {/* head */}
     <thead className='text-center'>
       <tr>
-      <th className="border-r">Label</th>
-      <th className="border-r">Dorm</th>
-      <th className="border-r">Description</th>
-      <th className="border-r">Date</th>
-      <th>Info</th>
+        <th className='text-center border-r'>Label</th>
+        <th className='text-center border-r'>Dorm</th>
+        <th className='text-center border-r'>Description</th>
+        <th className='text-center border-r'>Date</th>
+        <th className='text-center'>Info</th>
       </tr>
     </thead>
     <tbody>
-      {reports.map((report, index) => (
-        <tr key={index} className="border-t">
+      {filteredReports.map((report, index) => (
+        <tr key={index}>
         <td className='text-center border-r'>{report.category}</td>
         <td className='text-center border-r'>{formatPlacement(report.placement)}</td>
-        <td className="border-r">{report.description}</td>
+        <td className='border-r max-w-96'>{report.description}</td>
         <td className='text-center border-r'>{
           new Date(report.failure_date).toLocaleString('en-US', {
             year: 'numeric',
@@ -146,7 +152,7 @@ const DrawerReports = () => {
           <h3 className="font-bold text-lg">Report ID: {report.id}</h3>
           <p className="py-4 font-semibold">Description: {report.description}</p>
           <p className="py-1 font-semibold">Placement: {formatPlacement(report.placement)}</p>
-          <p className="py-1 font-semibold">Categoty: {report.category}</p>
+          <p className="py-1 font-semibold">Category: {report.category}</p>
           <p className="py-1 font-semibold">Sender: {report.owner_email}</p>
           <p className="py-1 font-semibold">Date: {new Date(report.failure_date).toLocaleString('en-US', {
             year: 'numeric',
@@ -173,16 +179,16 @@ const DrawerReports = () => {
     </tbody>
   </table>
   <div className="join flex justify-center py-8">
-        {Array.from({ length: pageCount }, (_, i) => (
+        {Array.from({ length: totalPages }, (_, i) => (
           <input
             key={i + 1}
-            className="join-item btn btn-square"
+            className='join-item btn btn-square page-item'
             type="radio"
-            name="options"
             aria-label={i + 1}
+            name="options"
             checked={currentPage === i + 1}
-            onChange={handlePageChange}
-          />
+            onChange={() => paginate(i + 1)}
+          />  
         ))}
       </div>
 </div>

@@ -19,23 +19,31 @@ const Drawer = () => {
     return (
         <div className="drawer lg:drawer-open">
   <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-  <div className="drawer-content flex flex-col items-center justify-center bg-gray-100">
-  <div className="App flex items-center justify-center flex-col">
-    <iframe src="http://10.90.137.18:3000/d-solo/fdpa1canapou8a/monidorm-dashboard?orgId=1&from=1720122555995&to=1720727355995&theme=light&panelId=1" title="dashboard" width="450" height="400"></iframe>
-    <select className="select select-bordered max-w-xs" onChange={handleSelectChange} value={selectedOption}>
+  <div className="drawer-content flex flex-col justify-center bg-gray-100">
+    <div className='items-center justify-normal' style={{ transform: 'translateY(-30px) translateX(30px)' }}>
+    <select className="select select-bordered max-w-xs items" onChange={handleSelectChange} value={selectedOption}>
       <option disabled selected value=''>Reports per hour</option>
+      <option value="1">All</option>
       <option value="4">Dorm 1</option>
+      <option value="5">Dorm 2</option>
+      <option value="6">Dorm 3</option>
+      <option value="10">Dorm 4</option>
+      <option value="9">Dorm 5</option>
+      <option value="7">Dorm 6</option>
       <option value="8">Dorm 7</option>
       </select>
-    {selectedOption && (
+    </div>
+  <div className="App flex items-center justify-center flex-row">
+  {selectedOption && (
         <iframe
-          className='pr-2 mt-4'
           src={generateIframeSrc(selectedOption)}
           title='dashboard'
           width="450"
           height="400"
         ></iframe>
-      )}
+        )}
+    {/* <iframe src="http://10.90.137.18:3000/d-solo/fdpa1canapou8a/monidorm-dashboard?orgId=1&from=1720122555995&to=1720727355995&theme=light&panelId=1" title="dashboard" width="450" height="400"></iframe> */}
+    <iframe className='pl-2' src="http://10.90.137.18:3000/d-solo/fdpa1canapou8a/monidorm-dashboard?orgId=1&from=1720312200000&to=1720427400000&theme=light&panelId=2" title='dashboard' width="450" height="400" frameborder="0"></iframe>
 		</div>
     <label htmlFor="my-drawer-2" className="btn btn-primary drawer-button lg:hidden">
       Open drawer

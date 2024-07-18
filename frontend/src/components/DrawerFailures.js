@@ -1,31 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import {Link, useLocation } from 'react-router-dom';
-import axios from 'axios';
  
 const DrawerFailures = () => {
   const location = useLocation();
-  const [failures, setFailures] = useState([])
-  const [failureCount, setFailureCount] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [failures, setReports] = useState([]);
+  const [failureCount, setFailuresCount] = useState(0);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [showUpdateAlert, setShowUpdateAlert] = useState(false);
-  const failuresPerPage = 15;
+  const [currentPage, setCurrentPage] = useState(1);
+  const reportsPerPage = 7;
+  const totalPages = Math.ceil(failureCount / reportsPerPage);
+  
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  const pageCount = Math.ceil(failures.length / failuresPerPage);
+  const indexOfLastReport = currentPage * reportsPerPage;
+  const indexOfFirstReport = indexOfLastReport - reportsPerPage;
 
-  // Slice reports for the current page
-  const indexOfLastReport = currentPage * failuresPerPage;
-  const indexOfFirstReport = indexOfLastReport - failuresPerPage;
-  const currentFailures = failures.slice(indexOfFirstReport, indexOfLastReport);
+const [selectedOption, setSelectedOption] = useState('all');
 
-  // Handle page change
-  const handlePageChange = (event) => {
-    setCurrentPage(Number(event.target.getAttribute('aria-label')));
-  };
+// Function to filter reports based on the selected category
+const filteredFailures = failures.filter(report => selectedOption === 'all' || report.category === selectedOption).slice(indexOfFirstReport, indexOfLastReport);
 
   useEffect(() => {
     const fetchFailures = () => {
-      fetch('http://10.90.137.18:8080/api/failure/all', {
+      let url = 'http://10.90.137.18:8080/api/failure/all';
+      if (selectedCategory !== 'all') {
+        url = `http://10.90.137.18:8080/api/failure/allByCategory?category=${selectedCategory}`;
+      }
+      fetch(url, {
         headers: {
           'Token': 'token',
         },
@@ -37,14 +40,14 @@ const DrawerFailures = () => {
         return response.json();
       })
       .then(data => {
-        const newFailures = data.responses;
-        if (newFailures.length > failureCount && !isFirstLoad) {
+        const newReports = data.responses;
+        if (newReports.length > failureCount && !isFirstLoad) {
           setShowUpdateAlert(true); // Show the HTML alert instead of browser alert
         } else if (isFirstLoad) {
           setIsFirstLoad(false); // Update the flag after the first load
         }
-        setFailureCount(newFailures.length);
-        setFailures(newFailures); // Update state with fetched reports
+        setFailuresCount(newReports.length);
+        setReports(newReports); // Update state with fetched reports
       })
       .catch(error => console.error('Error fetching reports:', error));
     };
@@ -53,7 +56,12 @@ const DrawerFailures = () => {
     const intervalId = setInterval(fetchFailures, 10000); // Fetch every 10 seconds
 
     return () => clearInterval(intervalId); // Cleanup on component unmount
-  }, [failureCount, isFirstLoad]);
+  }, [failureCount, isFirstLoad, selectedCategory]);
+
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+    setCurrentPage(1); // Reset to first page whenever the category changes
+  };
 
   const handleDelete = (id, index) => {
     fetch(`http://10.90.137.18:8080/api/admin/failure?failure_id=${id}`, {
@@ -72,7 +80,7 @@ const DrawerFailures = () => {
       }
     })
     .then(() => {
-      setFailures(currentReports => currentReports.filter(report => report.id !== id));
+      setReports(currentReports => currentReports.filter(report => report.id !== id));
       document.getElementById(`my_modal_${index}`).close();
     })
     .catch(error => console.error('Error deleting failure:', error));
@@ -106,25 +114,34 @@ const DrawerFailures = () => {
       <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col items-center justify-center bg-gray-100">
-        <div className="overflow-x-auto" style={{ transform: 'translateY(-60px)' }}>
+        <div className="overflow-x-auto">
+        <div className='pb-4'>
+    <select className="select select-bordered max-w-xs" onChange={handleCategoryChange} value={selectedCategory}>
+      <option disabled value="">Category</option>
+      <option value="all">All</option>
+      <option value="water">Water</option>
+      <option value="elevator">Elevator</option>
+      <option value="electricity">Electricity</option>
+    </select>
+    </div>
           <table className="table bg-white" >
     {/* head */}
     <thead className='text-center'>
       <tr>
-        <th className="border-r">Label</th>
-        <th className="border-r">Dorm</th>
-        <th className="border-r">Summarization</th>
-        <th className="border-r">Count</th>
-        <th className="border-r">Date</th>
-        <th>Info</th>
+        <th className='text-center border-r'>Label</th>
+        <th className='text-center border-r'>Dorm</th>
+        <th className='text-center border-r'>Summarization</th>
+        <th className='text-center border-r'>Count</th>
+        <th className='text-center border-r'>Date</th>
+        <th className='text-center'>Info</th>
       </tr>
     </thead>
     <tbody>
-      {failures.map((failure, index) => (
-        <tr key={index} className="border-t">
+      {filteredFailures.map((failure, index) => (
+        <tr key={index}>
         <td className='text-center border-r'>{failure.category}</td>
-        <td className='text- border-r'>{formatPlacement(failure.placement)}</td>
-        <td className='border-r'>{extractSummary(failure.summarization)}</td>
+        <td className='text-center border-r'>{formatPlacement(failure.placement)}</td>
+        <td className='border-r max-w-96'>{extractSummary(failure.summarization)}</td>
         <td className='text-center border-r'>{failure.report_count}</td>
         <td className='text-center border-r'>{
           new Date(failure.failure_date).toLocaleString('en-US', {
@@ -143,7 +160,7 @@ const DrawerFailures = () => {
           <h3 className="font-bold text-lg">Report ID: {failure.id}</h3>
           <p className="py-4 font-semibold">Summary: {extractSummary(failure.summarization)}</p>
           <p className="py-1 font-semibold">Placement: {formatPlacement(failure.placement)}</p>
-          <p className="py-1 font-semibold">Categoty: {failure.category}</p>
+          <p className="py-1 font-semibold">Category: {failure.category}</p>
           <p className="py-1 font-semibold">Count: {failure.report_count}</p>
           <p className="py-1 font-semibold">Date: {new Date(failure.failure_date).toLocaleString('en-US', {
             year: 'numeric',
@@ -170,16 +187,16 @@ const DrawerFailures = () => {
     </tbody>
   </table>
   <div className="join flex justify-center py-8">
-        {Array.from({ length: pageCount }, (_, i) => (
+        {Array.from({ length: totalPages }, (_, i) => (
           <input
             key={i + 1}
-            className="join-item btn btn-square"
+            className='join-item btn btn-square page-item'
             type="radio"
-            name="options"
             aria-label={i + 1}
+            name="options"
             checked={currentPage === i + 1}
-            onChange={handlePageChange}
-          />
+            onChange={() => paginate(i + 1)}
+          />  
         ))}
       </div>
 </div>

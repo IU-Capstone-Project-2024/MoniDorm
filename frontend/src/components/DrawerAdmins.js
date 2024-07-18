@@ -1,25 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {Link, useLocation } from 'react-router-dom';
  
 const Drawer = () => {
   const location = useLocation();
-  const [admins, setAdmins] = useState([]);
-
-  useEffect(() => {
-    fetch('http://10.90.137.18:8080/api/report/all', {
-      headers: {
-        'Token': 'token',
-      }})
-      .then(response => {
-        if (!response.ok) {   
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => setAdmins(data.responses)) // Update state with fetched reports
-      .catch(error => console.error('Error fetching reports:', error));
-  }, []);
-    
 
   // Function to determine if the link is active based on the current location
   const isActive = (path) => location.pathname.includes(path);
@@ -32,31 +15,29 @@ const Drawer = () => {
     {/* head */}
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Dorm</th>
-        <th>Role</th>
-        <th>Info</th>
+        <th className='text-center border-r'>Name</th>
+        <th className='text-center border-r'>Dorm</th>
+        <th className='text-center border-r'>Role</th>
+        <th className='text-center'>Info</th>
       </tr>
     </thead>
     <tbody>
-    {admins.map((admin, index) => (
-      <tr key={index} className="border-t">
-      <td className='hover'>
-        <td>{admin.name}</td>
-        <td>{admin.dorm}</td>  
-        <td>{admin.role}</td>
-        <td><button className="btn btn-outline btn-primary w-24" onClick={()=>document.getElementById(`my_modal_${index}`).showModal()}>View</button>
-      </td>
-      <dialog id={`my_modal_${index}`} className="modal">
+      {/* row 1 */}
+      <tr className='hover'>
+        <th className='text-center border-r'>John Doe</th>
+        <td className='text-center border-r'>7</td>  
+        <td className='text-center border-r'>Dorm Admin</td>
+        <td><button className="btn btn-outline hover btn-primary w-24" onClick={()=>document.getElementById(`my_modal_1`).showModal()}>View</button>
+        <dialog id={`my_modal_1`} className="modal">
           <div className="modal-box">
-          <h3 className="font-bold text-lg">Admin ID: {admin.id}</h3>
-          <p className="py-4 font-semibold">Name: {admin.name}</p>
-          <p className="py-4 font-semibold">Role: {admin.role}</p>
-          <p className="py-4 font-semibold">Dorm: {admin.dorm}</p>
-          <p className="py-1 font-semibold">Telegram: {admin.telegram}</p>
-          <p className="py-1 font-semibold">Phone number: {admin.phone}</p>
-          <p className="py-1 font-semibold">Email: {admin.owner_email}</p>
-          <div className="modal-action"> 
+          <h3 className="font-bold text-lg">Information</h3>
+          <p className="py-4 font-semibold">Name: John Doe</p>
+          <p className="py-1 font-semibold">Dorm: 7</p>
+          <p className="py-1 font-semibold">Role: Dorm Administrator</p>
+          <p className="py-1 font-semibold">Phone: +79999999999</p>
+          <p className="py-1 font-semibold">Telegram: @johnjohn</p>
+          <p className="py-1 font-semibold">Email: j.doe@innopolis.university</p>
+          <div className="modal-action">
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
               <button className="btn">Close</ button>
@@ -64,9 +45,58 @@ const Drawer = () => {
           </div>
         </div>
       </dialog>
-      </td>
+        </td>
       </tr>
-    ))}
+      {/* row 2 */}
+      <tr className="hover">
+        <th className='text-center border-r'>Some Name</th>
+        <td className='text-center border-r'>5</td>  
+        <td className='text-center border-r'>Dorm Admin</td>
+        <td><button className="btn btn-outline hover btn-primary w-24" onClick={()=>document.getElementById(`my_modal_2`).showModal()}>View</button>
+        <dialog id={`my_modal_2`} className="modal">
+          <div className="modal-box">
+          <h3 className="font-bold text-lg">Information</h3>
+          <p className="py-4 font-semibold">Name: Some Name</p>
+          <p className="py-1 font-semibold">Dorm: 5</p>
+          <p className="py-1 font-semibold">Role: Dorm Administrator</p>
+          <p className="py-1 font-semibold">Phone: +78888888888</p>
+          <p className="py-1 font-semibold">Telegram: @dfjnjdfbd</p>
+          <p className="py-1 font-semibold">Email: s.name@innopolis.university</p>
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">Close</ button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+        </td>
+      </tr>
+      {/* row 3 */}
+      <tr className='hover'>
+        <th className='text-center border-r w-36'>Max Maxbetov</th>
+        <td className='text-center border-r w-24'>7</td>  
+        <td className='text-center border-r w-36'>Repairer</td>
+        <td><button className="btn btn-outline hover btn-primary w-24" onClick={()=>document.getElementById(`my_modal_3`).showModal()}>View</button>
+        <dialog id={`my_modal_3`} className="modal">
+          <div className="modal-box">
+          <h3 className="font-bold text-lg">Information</h3>
+          <p className="py-4 font-semibold">Name: Max Maxbetov</p>
+          <p className="py-1 font-semibold">Dorm: 7</p>
+          <p className="py-1 font-semibold">Role: Repairer</p>
+          <p className="py-1 font-semibold">Phone: +77777777777</p>
+          <p className="py-1 font-semibold">Telegram: @kaifarik</p>
+          <p className="py-1 font-semibold">Email: m.maxbetov@innopolis.university</p>
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">Close</ button>
+            </form>
+          </div>
+        </div>
+      </dialog>
+        </td>
+      </tr>
     </tbody>
   </table>
 </div>
