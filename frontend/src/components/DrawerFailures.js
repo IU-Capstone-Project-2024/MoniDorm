@@ -87,8 +87,8 @@ const filteredFailures = failures.filter(report => selectedOption === 'all' || r
   };
 
   function extractSummary(summary) {
-    const lastPeriodIndex = summary.lastIndexOf('. ');
-    const extractedSummary = summary.substring(lastPeriodIndex + 38);
+    const lastPeriodIndex = summary.lastIndexOf('.\n');
+    const extractedSummary = summary.substring(lastPeriodIndex + 2);
     return extractedSummary;
   }
 

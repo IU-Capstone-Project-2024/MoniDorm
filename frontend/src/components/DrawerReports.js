@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {Link, useLocation } from 'react-router-dom';  
- 
+import { Link, useLocation } from 'react-router-dom';
+
 const DrawerReports = () => {
   const location = useLocation();
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -9,7 +9,7 @@ const DrawerReports = () => {
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [showUpdateAlert, setShowUpdateAlert] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const reportsPerPage = 7;
+  const reportsPerPage = 6;
   const totalPages = Math.ceil(reportCount / reportsPerPage);
   
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -19,6 +19,8 @@ const DrawerReports = () => {
 
   // Assuming you have a state for selectedOption and a function to handle its change
 const [selectedOption, setSelectedOption] = useState('all');
+const [selectedPlacement, setSelectedPlacement] = useState('');
+
 
 // Function to filter reports based on the selected category
 const filteredReports = reports.filter(report => selectedOption === 'all' || report.category === selectedOption).slice(indexOfFirstReport, indexOfLastReport);
@@ -29,6 +31,9 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
       let url = 'http://10.90.137.18:8080/api/report/all';
       if (selectedCategory !== 'all') {
         url = `http://10.90.137.18:8080/api/report/allByCategory?category=${selectedCategory}`;
+      }
+      if (selectedPlacement) {
+        url = `http://10.90.137.18:8080/api/report/allByPlacement?placement=${selectedPlacement}`;
       }
       fetch(url, {
         headers: {
@@ -58,11 +63,21 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
     const intervalId = setInterval(fetchReports, 10000); // Fetch every 10 seconds
 
     return () => clearInterval(intervalId); // Cleanup on component unmount
-  }, [reportCount, isFirstLoad, selectedCategory]);
+
+    
+  }, [reportCount, isFirstLoad, selectedCategory, selectedPlacement]);
 
   const handleCategoryChange = (event) => {
-    setSelectedCategory(event.target.value);
-    setCurrentPage(1); // Reset to first page whenever the category changes
+    setSelectedCategory(event.target.value); // Update the selected category
+    setSelectedPlacement(''); // Reset placement selection
+    setCurrentPage(1); // Reset to the first page of reports
+  };
+  
+  // Handles changes in placement selection
+  const handlePlacementChange = (event) => {
+    setSelectedPlacement(event.target.value); // Update the selected placement
+    setSelectedCategory('all'); // Reset category to default or 'all'
+    setCurrentPage(1); // Reset to the first page of reports
   };
 
   const handleDelete = (id, index) => {
@@ -87,7 +102,7 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
     })
     .catch(error => console.error('Error deleting erport:', error));
   };
-  function formatPlacement(placement) {
+  function formatPlacementDorm(placement) {
     const parts = placement.split('.');
     let dormNumber = parts[1];
     let floorNumber = parts[2];
@@ -98,9 +113,25 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
     }
   
     if (!floorNumber) {
-      return `Dorm ${dormNumber}`;
+      return dormNumber;
     }
-    return `Dorm ${dormNumber}, Floor ${floorNumber}`;
+    return dormNumber;
+  }
+
+  function formatPlacementFloor(placement) {
+    const parts = placement.split('.');
+    let dormNumber = parts[1];
+    let floorNumber = parts[2];
+
+    dormNumber = dormNumber.substring(1);
+    if (floorNumber) {
+      floorNumber = floorNumber.substring(1);
+    }
+  
+    if (!floorNumber) {
+      return dormNumber;
+    }
+    return floorNumber;
   }
 
   const isActive = (path) => location.pathname.includes(path);
@@ -117,6 +148,24 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
       <option value="elevator">Elevator</option>
       <option value="electricity">Electricity</option>
     </select>
+    <select onChange={handlePlacementChange} value={selectedPlacement} className="select select-bordered max-w-xs">
+      <option disabled value="">Dorm</option>
+      <option value="all">All</option>
+      <option value="dorms.d1">Dorm 1</option>
+      <option value="dorms.d2">Dorm 2</option>
+      <option value="dorms.d3">Dorm 3</option>
+      <option value="dorms.d4">Dorm 4</option>
+      <option value="dorms.d5">Dorm 5</option>
+      <option value="dorms.d6">Dorm 6</option>
+      <option value="dorms.d7">Dorm 7</option>
+    </select>
+    <select onChange={handlePlacementChange} value={selectedPlacement} className="select select-bordered max-w-xs">
+      <option disabled value="">Floor</option>
+      <option value="all">All</option>
+      <option value="dorms.f1">1</option>
+      <option value="dorms.f2">2</option>
+      <option value="dorms.f10">3</option>
+    </select>
     </div>
   <table className="table bg-white">
     {/* head */}
@@ -124,6 +173,7 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
       <tr>
         <th className='text-center border-r'>Label</th>
         <th className='text-center border-r'>Dorm</th>
+        <th className='text-center border-r'>Floor</th>
         <th className='text-center border-r'>Description</th>
         <th className='text-center border-r'>Date</th>
         <th className='text-center'>Info</th>
@@ -133,7 +183,8 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
       {filteredReports.map((report, index) => (
         <tr key={index}>
         <td className='text-center border-r'>{report.category}</td>
-        <td className='text-center border-r'>{formatPlacement(report.placement)}</td>
+        <td className='text-center border-r'>Dorm {formatPlacementDorm(report.placement)}</td>
+        <td className='text-center border-r'>Floor {formatPlacementFloor(report.placement)}</td>
         <td className='border-r max-w-96'>{report.description}</td>
         <td className='text-center border-r'>{
           new Date(report.failure_date).toLocaleString('en-US', {
@@ -151,7 +202,7 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
           <div className="modal-box">
           <h3 className="font-bold text-lg">Report ID: {report.id}</h3>
           <p className="py-4 font-semibold">Description: {report.description}</p>
-          <p className="py-1 font-semibold">Placement: {formatPlacement(report.placement)}</p>
+          <p className="py-1 font-semibold">Placement: {formatPlacementDorm(report.placement)}</p>
           <p className="py-1 font-semibold">Category: {report.category}</p>
           <p className="py-1 font-semibold">Sender: {report.owner_email}</p>
           <p className="py-1 font-semibold">Date: {new Date(report.failure_date).toLocaleString('en-US', {
