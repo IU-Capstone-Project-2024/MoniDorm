@@ -9,7 +9,7 @@ const DrawerFailures = () => {
   const [isFirstLoad, setIsFirstLoad] = useState(true);
   const [showUpdateAlert, setShowUpdateAlert] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const reportsPerPage = 7;
+  const reportsPerPage = 6;
   const totalPages = Math.ceil(failureCount / reportsPerPage);
   
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -18,50 +18,76 @@ const DrawerFailures = () => {
   const indexOfFirstReport = indexOfLastReport - reportsPerPage;
 
 const [selectedOption, setSelectedOption] = useState('all');
+const [selectedDorm, setSelectedDorm] = useState('all');
+const [selectedFloor, setSelectedFloor] = useState('all');
 
 // Function to filter reports based on the selected category
 const filteredFailures = failures.filter(report => selectedOption === 'all' || report.category === selectedOption).slice(indexOfFirstReport, indexOfLastReport);
 
-  useEffect(() => {
-    const fetchFailures = () => {
-      let url = 'http://10.90.137.18:8080/api/failure/all';
-      if (selectedCategory !== 'all') {
-        url = `http://10.90.137.18:8080/api/failure/allByCategory?category=${selectedCategory}`;
+useEffect(() => {
+  const fetchFailures = () => {
+    const url = 'http://10.90.137.18:8080/api/failure/all';
+    fetch(url, {
+      headers: {
+        'Token': 'token',
+      },
+    })
+    .then(response => {
+      if (!response.ok) {   
+        throw new Error('Network response was not ok');
       }
-      fetch(url, {
-        headers: {
-          'Token': 'token',
-        },
-      })
-      .then(response => {
-        if (!response.ok) {   
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        const newReports = data.responses;
-        if (newReports.length > failureCount && !isFirstLoad) {
-          setShowUpdateAlert(true); // Show the HTML alert instead of browser alert
-        } else if (isFirstLoad) {
-          setIsFirstLoad(false); // Update the flag after the first load
-        }
-        setFailuresCount(newReports.length);
-        setReports(newReports); // Update state with fetched reports
-      })
-      .catch(error => console.error('Error fetching reports:', error));
-    };
+      return response.json();
+    })
+    .then(data => {
+      let newReports = data.responses;
+      // Filter by category if selectedCategory is not 'all'
+      if (selectedCategory !== 'all') {
+        newReports = newReports.filter(report => report.category === selectedCategory);
+      }
+      // Filter by dorm and floor using report.placement
+      if (selectedDorm !== 'all' || selectedFloor !== 'all') {
+        newReports = newReports.filter(report => {
+          const placementParts = report.placement.split('.');
+          const dorm = placementParts[1]; // Assuming the format is always dorms.dX.fY
+          const floor = placementParts[2];
+          const matchesDorm = selectedDorm === 'all' || `d${selectedDorm}` === dorm;
+          const matchesFloor = selectedFloor === 'all' || `f${selectedFloor}` === floor;
+          return matchesDorm && matchesFloor;
+        });
+      }
+      if (newReports.length > failureCount && !isFirstLoad) {
+        setShowUpdateAlert(true); // Show the HTML alert instead of browser alert
+      } else if (isFirstLoad) {
+        setIsFirstLoad(false); // Update the flag after the first load
+      }
+      setFailuresCount(newReports.length);
+      setReports(newReports); // Update state with fetched reports
+    })
+    .catch(error => console.error('Error fetching reports:', error));
+  };
 
-    fetchFailures();
-    const intervalId = setInterval(fetchFailures, 10000); // Fetch every 10 seconds
+  fetchFailures();
+  const intervalId = setInterval(fetchFailures, 10000); // Fetch every 10 seconds
 
-    return () => clearInterval(intervalId); // Cleanup on component unmount
-  }, [failureCount, isFirstLoad, selectedCategory]);
+  return () => clearInterval(intervalId); // Cleanup on component unmount
+}, [failureCount, isFirstLoad, selectedCategory, selectedDorm, selectedFloor]);
 
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
     setCurrentPage(1); // Reset to first page whenever the category changes
   };
+
+    // Handles changes in dorm selection
+const handleDormChange = (event) => {
+  setSelectedDorm(event.target.value); // Update the selected dorm
+  setCurrentPage(1); // Reset to the first page of reports
+};
+
+// Handles changes in floor selection
+const handleFloorChange = (event) => {
+  setSelectedFloor(event.target.value); // Update the selected floor
+  setCurrentPage(1); // Reset to the first page of reports
+};
 
   const handleDelete = (id, index) => {
     fetch(`http://10.90.137.18:8080/api/admin/failure?failure_id=${id}`, {
@@ -115,13 +141,45 @@ const filteredFailures = failures.filter(report => selectedOption === 'all' || r
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col items-center justify-center bg-gray-100">
         <div className="overflow-x-auto">
-        <div className='pb-4'>
-    <select className="select select-bordered max-w-xs" onChange={handleCategoryChange} value={selectedCategory}>
-      <option disabled value="">Category</option>
-      <option value="all">All</option>
+        <div className='py-4'>
+    <select onChange={handleCategoryChange} className="select select-bordered max-w-xs" value={selectedCategory}>
+      <option value="all">Category</option>
+      {/* <option value="all">All</option> */}
       <option value="water">Water</option>
+      <option value="wifi">Wi-Fi</option>
       <option value="elevator">Elevator</option>
       <option value="electricity">Electricity</option>
+    </select>
+    <select onChange={handleDormChange} value={selectedDorm} className="select select-bordered max-w-xs" style={{ transform: 'translateX(5px)' }}>
+      <option value="all">Dorm</option>
+      {/* <option value="all">All</option> */}
+      <option value="1">Dorm 1</option>
+      <option value="2">Dorm 2</option>
+      <option value="3">Dorm 3</option>
+      <option value="4">Dorm 4</option>
+      <option value="5">Dorm 5</option>
+      <option value="6">Dorm 6</option>
+      <option value="7">Dorm 7</option>
+    </select>
+    <select onChange={handleFloorChange} value={selectedFloor} disabled={!selectedDorm} className="select select-bordered max-w-xs" style={{ transform: 'translateX(10px)' }}>
+      <option value="all">Floor</option>
+      {/* Render 5 floor options for dorms 1-5, and 13 for dorms 6-7 */}
+      {['1', '2', '3', '4', '5'].includes(selectedDorm) && (
+        <>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </>
+      )}
+      {['6', '7'].includes(selectedDorm) && (
+        <>
+          {Array.from({ length: 13 }, (_, i) => (
+            <option key={i + 1} value={i + 1}>{i + 1}</option>
+          ))}
+        </>
+      )}
     </select>
     </div>
           <table className="table bg-white" >

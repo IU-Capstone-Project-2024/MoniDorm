@@ -20,7 +20,8 @@ const DrawerReports = () => {
   // Assuming you have a state for selectedOption and a function to handle its change
 const [selectedOption, setSelectedOption] = useState('all');
 const [selectedPlacement, setSelectedPlacement] = useState('');
-
+const [selectedDorm, setSelectedDorm] = useState('all');
+const [selectedFloor, setSelectedFloor] = useState('all');
 
 // Function to filter reports based on the selected category
 const filteredReports = reports.filter(report => selectedOption === 'all' || report.category === selectedOption).slice(indexOfFirstReport, indexOfLastReport);
@@ -28,13 +29,7 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
 
   useEffect(() => {
     const fetchReports = () => {
-      let url = 'http://10.90.137.18:8080/api/report/all';
-      if (selectedCategory !== 'all') {
-        url = `http://10.90.137.18:8080/api/report/allByCategory?category=${selectedCategory}`;
-      }
-      if (selectedPlacement) {
-        url = `http://10.90.137.18:8080/api/report/allByPlacement?placement=${selectedPlacement}`;
-      }
+      const url = 'http://10.90.137.18:8080/api/report/all';
       fetch(url, {
         headers: {
           'Token': 'token',
@@ -47,7 +42,22 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
         return response.json();
       })
       .then(data => {
-        const newReports = data.responses;
+        let newReports = data.responses;
+        // Filter by category if selectedCategory is not 'all'
+        if (selectedCategory !== 'all') {
+          newReports = newReports.filter(report => report.category === selectedCategory);
+        }
+        // Filter by dorm and floor using report.placement
+        if (selectedDorm !== 'all' || selectedFloor !== 'all') {
+          newReports = newReports.filter(report => {
+            const placementParts = report.placement.split('.');
+            const dorm = placementParts[1]; // Assuming the format is always dorms.dX.fY
+            const floor = placementParts[2];
+            const matchesDorm = selectedDorm === 'all' || `d${selectedDorm}` === dorm;
+            const matchesFloor = selectedFloor === 'all' || `f${selectedFloor}` === floor;
+            return matchesDorm && matchesFloor;
+          });
+        }
         if (newReports.length > reportCount && !isFirstLoad) {
           setShowUpdateAlert(true); // Show the HTML alert instead of browser alert
         } else if (isFirstLoad) {
@@ -63,9 +73,7 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
     const intervalId = setInterval(fetchReports, 10000); // Fetch every 10 seconds
 
     return () => clearInterval(intervalId); // Cleanup on component unmount
-
-    
-  }, [reportCount, isFirstLoad, selectedCategory, selectedPlacement]);
+  }, [reportCount, isFirstLoad, selectedCategory, selectedDorm, selectedFloor]);
 
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value); // Update the selected category
@@ -74,11 +82,24 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
   };
   
   // Handles changes in placement selection
-  const handlePlacementChange = (event) => {
-    setSelectedPlacement(event.target.value); // Update the selected placement
-    setSelectedCategory('all'); // Reset category to default or 'all'
-    setCurrentPage(1); // Reset to the first page of reports
-  };
+  // const handlePlacementChange = (event) => {
+  //   setSelectedPlacement(event.target.value); // Update the selected placement
+  //   setSelectedCategory('all'); // Reset category to default or 'all'
+  //   setCurrentPage(1); // Reset to the first page of reports
+  // };
+
+
+  // Handles changes in dorm selection
+const handleDormChange = (event) => {
+  setSelectedDorm(event.target.value); // Update the selected dorm
+  setCurrentPage(1); // Reset to the first page of reports
+};
+
+// Handles changes in floor selection
+const handleFloorChange = (event) => {
+  setSelectedFloor(event.target.value); // Update the selected floor
+  setCurrentPage(1); // Reset to the first page of reports
+};
 
   const handleDelete = (id, index) => {
     fetch(`http://10.90.137.18:8080/api/admin/report?report_id=${id}`, {
@@ -102,7 +123,24 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
     })
     .catch(error => console.error('Error deleting erport:', error));
   };
-  function formatPlacementDorm(placement) {
+
+  // function formatPlacementDorm(placement) {
+  //   const parts = placement.split('.');
+  //   let dormNumber = parts[1];
+  //   let floorNumber = parts[2];
+
+  //   dormNumber = dormNumber.substring(1);
+  //   if (floorNumber) {
+  //     floorNumber = floorNumber.substring(1);
+  //   }
+  
+  //   if (!floorNumber) {
+  //     return dormNumber;
+  //   }
+  //   return dormNumber;
+  // }
+
+  function formatPlacement(placement) {
     const parts = placement.split('.');
     let dormNumber = parts[1];
     let floorNumber = parts[2];
@@ -113,25 +151,9 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
     }
   
     if (!floorNumber) {
-      return dormNumber;
+      return `Dorm ${dormNumber}`;
     }
-    return dormNumber;
-  }
-
-  function formatPlacementFloor(placement) {
-    const parts = placement.split('.');
-    let dormNumber = parts[1];
-    let floorNumber = parts[2];
-
-    dormNumber = dormNumber.substring(1);
-    if (floorNumber) {
-      floorNumber = floorNumber.substring(1);
-    }
-  
-    if (!floorNumber) {
-      return dormNumber;
-    }
-    return floorNumber;
+    return `Dorm ${dormNumber}, Floor ${floorNumber}`;
   }
 
   const isActive = (path) => location.pathname.includes(path);
@@ -142,29 +164,43 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
   <div className="overflow-x-auto">
     <div className='py-4'>
     <select onChange={handleCategoryChange} className="select select-bordered max-w-xs" value={selectedCategory}>
-      <option disabled value="">Category</option>
-      <option value="all">All</option>
+      <option value="all">Category</option>
+      {/* <option value="all">All</option> */}
       <option value="water">Water</option>
+      <option value="wifi">Wi-Fi</option>
       <option value="elevator">Elevator</option>
       <option value="electricity">Electricity</option>
     </select>
-    <select onChange={handlePlacementChange} value={selectedPlacement} className="select select-bordered max-w-xs">
-      <option disabled value="">Dorm</option>
-      <option value="all">All</option>
-      <option value="dorms.d1">Dorm 1</option>
-      <option value="dorms.d2">Dorm 2</option>
-      <option value="dorms.d3">Dorm 3</option>
-      <option value="dorms.d4">Dorm 4</option>
-      <option value="dorms.d5">Dorm 5</option>
-      <option value="dorms.d6">Dorm 6</option>
-      <option value="dorms.d7">Dorm 7</option>
+    <select onChange={handleDormChange} value={selectedDorm} className="select select-bordered max-w-xs" style={{ transform: 'translateX(5px)' }}>
+      <option value="all">Dorm</option>
+      {/* <option value="all">All</option> */}
+      <option value="1">Dorm 1</option>
+      <option value="2">Dorm 2</option>
+      <option value="3">Dorm 3</option>
+      <option value="4">Dorm 4</option>
+      <option value="5">Dorm 5</option>
+      <option value="6">Dorm 6</option>
+      <option value="7">Dorm 7</option>
     </select>
-    <select onChange={handlePlacementChange} value={selectedPlacement} className="select select-bordered max-w-xs">
-      <option disabled value="">Floor</option>
-      <option value="all">All</option>
-      <option value="dorms.f1">1</option>
-      <option value="dorms.f2">2</option>
-      <option value="dorms.f10">3</option>
+    <select onChange={handleFloorChange} value={selectedFloor} disabled={selectedDorm === 'all'} className="select select-bordered max-w-xs" style={{ transform: 'translateX(10px)' }}>
+      <option value="all">Floor</option>
+      {/* Render 5 floor options for dorms 1-5, and 13 for dorms 6-7 */}
+      {['1', '2', '3', '4', '5'].includes(selectedDorm) && (
+        <>
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </>
+      )}
+      {['6', '7'].includes(selectedDorm) && (
+        <>
+          {Array.from({ length: 13 }, (_, i) => (
+            <option key={i + 1} value={i + 1}>{i + 1}</option>
+          ))}
+        </>
+      )}
     </select>
     </div>
   <table className="table bg-white">
@@ -172,8 +208,7 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
     <thead className='text-center'>
       <tr>
         <th className='text-center border-r'>Label</th>
-        <th className='text-center border-r'>Dorm</th>
-        <th className='text-center border-r'>Floor</th>
+        <th className='text-center border-r'>Placement</th>
         <th className='text-center border-r'>Description</th>
         <th className='text-center border-r'>Date</th>
         <th className='text-center'>Info</th>
@@ -183,8 +218,7 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
       {filteredReports.map((report, index) => (
         <tr key={index}>
         <td className='text-center border-r'>{report.category}</td>
-        <td className='text-center border-r'>Dorm {formatPlacementDorm(report.placement)}</td>
-        <td className='text-center border-r'>Floor {formatPlacementFloor(report.placement)}</td>
+        <td className='text-center border-r'>{formatPlacement(report.placement)}</td>
         <td className='border-r max-w-96'>{report.description}</td>
         <td className='text-center border-r'>{
           new Date(report.failure_date).toLocaleString('en-US', {
@@ -202,7 +236,7 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
           <div className="modal-box">
           <h3 className="font-bold text-lg">Report ID: {report.id}</h3>
           <p className="py-4 font-semibold">Description: {report.description}</p>
-          <p className="py-1 font-semibold">Placement: {formatPlacementDorm(report.placement)}</p>
+          <p className="py-1 font-semibold">Placement: {formatPlacement(report.placement)}</p>
           <p className="py-1 font-semibold">Category: {report.category}</p>
           <p className="py-1 font-semibold">Sender: {report.owner_email}</p>
           <p className="py-1 font-semibold">Date: {new Date(report.failure_date).toLocaleString('en-US', {
