@@ -1,0 +1,116 @@
+services:
+  # API Server + Backend Part of the project
+  postgresql:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    env_file: ./.env
+    networks:
+      - backend
+    volumes:
+      - postgresql:/var/lib/postgresql/data
+
+  liquibase:
+    image: liquibase/liquibase:4.25
+    depends_on:
+      - postgresql
+    env_file:
+      - ./.env
+    command:
+      - --changelog-file=db.master-changelog.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql:5432/${POSTGRES_DB}
+      - --username=${POSTGRES_USER}
+      - --password=${POSTGRES_PASSWORD}
+      - update
+    volumes:
+      - ./api-server/db/migrations:/liquibase/changelog
+    networks:
+      - backend
+
+  monidorm:
+    build:
+      dockerfile: ./api-server/Dockerfile
+      context: .
+      pull: false
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    networks:
+      - backend
+    env_file:
+      - ./.env
+    depends_on:
+      - postgresql
+      - liquibase
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Bot Ecosystem + Failure Detector
+  bot:
+    build:
+      context: .
+      dockerfile: ./bot.Dockerfile
+    env_file:
+      - ./telegram-bot/.env.prod
+    depends_on:
+      - mongo
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  mongo:
+    image: mongodb/mongodb-community-server:6.0-ubi8
+    env_file:
+      - ./telegram-bot/.env.prod
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  failure-alerting-service:
+    build:
+      context: .
+      dockerfile: ./failureAlerting.Dockerfile
+    env_file:
+      - ./failure-alerting/.env.prod
+    depends_on:
+      - bot
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Metrics System
+  prometheus:
+    build:
+      context: .
+      dockerfile: prometheus.Dockerfile
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus_data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  grafana:
+    image: grafana/grafana-oss
+    environment:
+      - GF_SECURITY_ALLOW_EMBEDDING=true
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - grafana_provisioning_data:/etc/grafana/provisioning
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  postgresql: { }
+  mongo-data: { }
+  prometheus_data: { }
+  grafana_data: { }
+  grafana_provisioning_data: { }
+
+networks:
+  backend: { }
