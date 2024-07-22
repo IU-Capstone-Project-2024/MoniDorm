@@ -1,88 +1,22 @@
 import React from 'react';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
  
 const Navbar = () => {
+  const [cookies, setCookie, removeCookie] = useCookies(['is_authorized']);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    removeCookie('is_authorized', { path: '/' }); // Delete the is_authorized cookie
+    navigate('/login'); // Redirect to login page
+  };
+
     return (
-        // <div class="navbar bg-base-100">
-		// 		<div class="flex-none">
-		// 			<div class="drawer">
-		// 				<input id="my-drawer" type="checkbox" class="drawer-toggle" />
-		// 				<div class="drawer-content">
-		// 					<label for="my-drawer" class="btn btn-square btn-ghost drawer-button">
-		// 						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-		// 					</label>
-		// 				</div>
-		// 				<div class="drawer-side">
-		// 		<label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-		// 		<ul class="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
-		// 			<li>Element 1</li>
-		// 			<li>Element 2</li>
-		// 		</ul>
-		// 	</div>
-		// 		</div>
-		// 	</div>
-		// 	<div class="flex-1"></div>
-		// 	<div class="flex-none">
-		// 		<label className="flex cursor-pointer gap-2 items-center justify-center">
-  		// 			<svg width="30" height="30" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-  		// 			<path d="M11.4419 25C9.28888 25 7.53564 23.2479 7.53564 21.0938C7.53564 20.6625 7.88564 20.3125 8.31689 20.3125C8.74815 20.3125 9.09814 20.6625 9.09814 21.0938C9.09814 22.3866 10.1502 23.4375 11.4419 23.4375C12.7336 23.4375 13.7856 22.3866 13.7856 21.0938C13.7856 20.6625 14.1356 20.3125 14.5669 20.3125C14.9981 20.3125 15.3481 20.6625 15.3481 21.0938C15.3481 23.2479 13.5951 25 11.4419 25Z" fill="#FE5C73" />
-  		// 			<path d="M20.0357 21.875H2.84824C1.84307 21.875 1.02539 21.0573 1.02539 20.0521C1.02539 19.5187 1.25771 19.0136 1.66283 18.6666C1.68896 18.6438 1.717 18.623 1.74618 18.6041C3.2753 17.2697 4.15039 15.35 4.15039 13.3228V10.4166C4.15039 6.39591 7.42226 3.125 11.442 3.125C11.6087 3.125 11.7889 3.12805 11.9556 3.15628C12.3816 3.22704 12.6692 3.63026 12.5982 4.05521C12.5275 4.48017 12.117 4.7678 11.6993 4.69685C11.6159 4.6833 11.5244 4.6875 11.442 4.6875C8.28381 4.6875 5.71289 7.25727 5.71289 10.4166V13.3228C5.71289 15.8396 4.60968 18.2209 2.68898 19.8551C2.67334 19.8677 2.6598 19.8792 2.64301 19.8906C2.61497 19.9261 2.58789 19.9802 2.58789 20.0521C2.58789 20.1937 2.70672 20.3125 2.84824 20.3125H20.0357C20.1775 20.3125 20.2963 20.1937 20.2963 20.0521C20.2963 19.9791 20.2692 19.9261 20.24 19.8906C20.2244 19.8792 20.2108 19.8677 20.1952 19.8551C18.2734 18.2198 17.1713 15.8396 17.1713 13.3228V12.1876C17.1713 11.7563 17.5213 11.4063 17.9525 11.4063C18.3838 11.4063 18.7338 11.7563 18.7338 12.1876V13.3228C18.7338 15.3511 19.6098 17.2718 21.1411 18.6073C21.1691 18.626 21.1962 18.6459 21.2212 18.6678C21.6265 19.0136 21.8588 19.5187 21.8588 20.0521C21.8588 21.0573 21.0411 21.875 20.0357 21.875Z" fill="#FE5C73" />
-  		// 			<path d="M18.7338 10.4166C15.8619 10.4166 13.5254 8.08029 13.5254 5.2084C13.5254 2.3365 15.8619 0 18.7338 0C21.6057 0 23.942 2.3365 23.942 5.2084C23.942 8.08029 21.6057 10.4166 18.7338 10.4166ZM18.7338 1.5625C16.7233 1.5625 15.0879 3.19786 15.0879 5.2084C15.0879 7.21874 16.7233 8.8541 18.7338 8.8541C20.7441 8.8541 22.3795 7.21874 22.3795 5.2084C22.3795 3.19786 20.7441 1.5625 18.7338 1.5625Z" fill="#FE5C73" />
-		// 			</svg>
-		// 		</label>
-		// 		<label className="flex cursor-pointer gap-2 items-center justify-center">
-		// 		<div class="avatar">
-  		// 			<div class="w-12 rounded-full">
-    	// 				<img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" alt="avatar" />
-  		// 			</div>
-		// 		</div>
-		// 		</label>
-		// 	</div>
-		// </div>
-
-
-
-
 		<div className="navbar bg-base-100">
   <div className="flex-1">
     <a className="btn btn-ghost text-xl" href='/'>MoniDorm</a>
   </div>
   <div className="flex-none">
-    <div className="dropdown dropdown-end">
-      <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
-        <div className="indicator">
-          {/* <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg> */}
-
-<svg width="30" height="30" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-  		 			<path d="M11.4419 25C9.28888 25 7.53564 23.2479 7.53564 21.0938C7.53564 20.6625 7.88564 20.3125 8.31689 20.3125C8.74815 20.3125 9.09814 20.6625 9.09814 21.0938C9.09814 22.3866 10.1502 23.4375 11.4419 23.4375C12.7336 23.4375 13.7856 22.3866 13.7856 21.0938C13.7856 20.6625 14.1356 20.3125 14.5669 20.3125C14.9981 20.3125 15.3481 20.6625 15.3481 21.0938C15.3481 23.2479 13.5951 25 11.4419 25Z" fill="#FE5C73" />
-  		 			<path d="M20.0357 21.875H2.84824C1.84307 21.875 1.02539 21.0573 1.02539 20.0521C1.02539 19.5187 1.25771 19.0136 1.66283 18.6666C1.68896 18.6438 1.717 18.623 1.74618 18.6041C3.2753 17.2697 4.15039 15.35 4.15039 13.3228V10.4166C4.15039 6.39591 7.42226 3.125 11.442 3.125C11.6087 3.125 11.7889 3.12805 11.9556 3.15628C12.3816 3.22704 12.6692 3.63026 12.5982 4.05521C12.5275 4.48017 12.117 4.7678 11.6993 4.69685C11.6159 4.6833 11.5244 4.6875 11.442 4.6875C8.28381 4.6875 5.71289 7.25727 5.71289 10.4166V13.3228C5.71289 15.8396 4.60968 18.2209 2.68898 19.8551C2.67334 19.8677 2.6598 19.8792 2.64301 19.8906C2.61497 19.9261 2.58789 19.9802 2.58789 20.0521C2.58789 20.1937 2.70672 20.3125 2.84824 20.3125H20.0357C20.1775 20.3125 20.2963 20.1937 20.2963 20.0521C20.2963 19.9791 20.2692 19.9261 20.24 19.8906C20.2244 19.8792 20.2108 19.8677 20.1952 19.8551C18.2734 18.2198 17.1713 15.8396 17.1713 13.3228V12.1876C17.1713 11.7563 17.5213 11.4063 17.9525 11.4063C18.3838 11.4063 18.7338 11.7563 18.7338 12.1876V13.3228C18.7338 15.3511 19.6098 17.2718 21.1411 18.6073C21.1691 18.626 21.1962 18.6459 21.2212 18.6678C21.6265 19.0136 21.8588 19.5187 21.8588 20.0521C21.8588 21.0573 21.0411 21.875 20.0357 21.875Z" fill="#FE5C73" />
-  		 			<path d="M18.7338 10.4166C15.8619 10.4166 13.5254 8.08029 13.5254 5.2084C13.5254 2.3365 15.8619 0 18.7338 0C21.6057 0 23.942 2.3365 23.942 5.2084C23.942 8.08029 21.6057 10.4166 18.7338 10.4166ZM18.7338 1.5625C16.7233 1.5625 15.0879 3.19786 15.0879 5.2084C15.0879 7.21874 16.7233 8.8541 18.7338 8.8541C20.7441 8.8541 22.3795 7.21874 22.3795 5.2084C22.3795 3.19786 20.7441 1.5625 18.7338 1.5625Z" fill="#FE5C73" />
-		 			</svg>
-          <span className="badge badge-sm indicator-item">2</span>
-        </div>
-      </div>
-      <div
-        tabIndex={0}
-        className="card card-compact dropdown-content bg-base-100 z-[1] mt-3 w-52 shadow">
-        <div className="card-body">
-          <span className="text-lg font-bold">New report</span>
-          <span className="text-info">New report has arrived</span>
-          <div className="card-actions">
-            <button className="btn btn-primary btn-block">View</button>
-          </div>
-        </div>
-      </div>
-    </div>
     <div className="dropdown dropdown-end">
       <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
         <div className="rounded-full">
@@ -102,8 +36,7 @@ const Navbar = () => {
       <ul
         tabIndex={0}
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-        <li><a href='/settings'>Settings</a></li>
-        <li><a>Logout</a></li>
+        <li><a onClick={handleLogout}>Logout</a></li>
       </ul>
     </div>
   </div>
