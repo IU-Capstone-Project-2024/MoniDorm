@@ -144,7 +144,6 @@ const handleFloorChange = (event) => {
         <div className='py-4'>
     <select onChange={handleCategoryChange} className="select select-bordered max-w-xs" value={selectedCategory}>
       <option value="all">Category</option>
-      {/* <option value="all">All</option> */}
       <option value="water">Water</option>
       <option value="wifi">Wi-Fi</option>
       <option value="elevator">Elevator</option>
@@ -152,7 +151,6 @@ const handleFloorChange = (event) => {
     </select>
     <select onChange={handleDormChange} value={selectedDorm} className="select select-bordered max-w-xs" style={{ transform: 'translateX(5px)' }}>
       <option value="all">Dorm</option>
-      {/* <option value="all">All</option> */}
       <option value="1">Dorm 1</option>
       <option value="2">Dorm 2</option>
       <option value="3">Dorm 3</option>
@@ -161,7 +159,7 @@ const handleFloorChange = (event) => {
       <option value="6">Dorm 6</option>
       <option value="7">Dorm 7</option>
     </select>
-    <select onChange={handleFloorChange} value={selectedFloor} disabled={!selectedDorm} className="select select-bordered max-w-xs" style={{ transform: 'translateX(10px)' }}>
+    <select onChange={handleFloorChange} value={selectedFloor} disabled={selectedDorm === 'all'} className="select select-bordered max-w-xs" style={{ transform: 'translateX(10px)' }}>
       <option value="all">Floor</option>
       {/* Render 5 floor options for dorms 1-5, and 13 for dorms 6-7 */}
       {['1', '2', '3', '4', '5'].includes(selectedDorm) && (
@@ -170,6 +168,10 @@ const handleFloorChange = (event) => {
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
+        </>
+      )}
+      {['5'].includes(selectedDorm) && (
+        <>
           <option value="5">5</option>
         </>
       )}

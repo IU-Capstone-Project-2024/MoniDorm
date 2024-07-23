@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loginError, setLoginError] = useState(false);
     const [cookies, setCookie] = useCookies(['is_authorized']);
     const navigate = useNavigate();
 
@@ -13,11 +14,11 @@ export default function Login() {
         if (email === process.env.REACT_APP_USERNAME && password === process.env.REACT_APP_PASSWORD) {
           // Set a cookie for 1 day upon successful login
           setCookie('is_authorized', true, { path: '/'});
-          console.log('Login successful');
+          setLoginError(false);
           // Redirect or update UI accordingly
           navigate('/')
         } else {
-          console.log('Login failed');
+          setLoginError(true);
           // Handle login failure
         }
       };
@@ -77,7 +78,7 @@ export default function Login() {
                   />
                 </div>
               </div>
-  
+              {loginError && <div className="text-red-500">The email or password is wrong.</div>} {/* Step 3: Display error message */}
               <div>
                 <button
                   type="submit"

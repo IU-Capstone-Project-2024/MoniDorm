@@ -81,14 +81,6 @@ const filteredReports = reports.filter(report => selectedOption === 'all' || rep
     setCurrentPage(1); // Reset to the first page of reports
   };
   
-  // Handles changes in placement selection
-  // const handlePlacementChange = (event) => {
-  //   setSelectedPlacement(event.target.value); // Update the selected placement
-  //   setSelectedCategory('all'); // Reset category to default or 'all'
-  //   setCurrentPage(1); // Reset to the first page of reports
-  // };
-
-
   // Handles changes in dorm selection
 const handleDormChange = (event) => {
   setSelectedDorm(event.target.value); // Update the selected dorm
@@ -124,21 +116,6 @@ const handleFloorChange = (event) => {
     .catch(error => console.error('Error deleting erport:', error));
   };
 
-  // function formatPlacementDorm(placement) {
-  //   const parts = placement.split('.');
-  //   let dormNumber = parts[1];
-  //   let floorNumber = parts[2];
-
-  //   dormNumber = dormNumber.substring(1);
-  //   if (floorNumber) {
-  //     floorNumber = floorNumber.substring(1);
-  //   }
-  
-  //   if (!floorNumber) {
-  //     return dormNumber;
-  //   }
-  //   return dormNumber;
-  // }
 
   function formatPlacement(placement) {
     const parts = placement.split('.');
@@ -165,7 +142,6 @@ const handleFloorChange = (event) => {
     <div className='py-4'>
     <select onChange={handleCategoryChange} className="select select-bordered max-w-xs" value={selectedCategory}>
       <option value="all">Category</option>
-      {/* <option value="all">All</option> */}
       <option value="water">Water</option>
       <option value="wifi">Wi-Fi</option>
       <option value="elevator">Elevator</option>
@@ -173,7 +149,6 @@ const handleFloorChange = (event) => {
     </select>
     <select onChange={handleDormChange} value={selectedDorm} className="select select-bordered max-w-xs" style={{ transform: 'translateX(5px)' }}>
       <option value="all">Dorm</option>
-      {/* <option value="all">All</option> */}
       <option value="1">Dorm 1</option>
       <option value="2">Dorm 2</option>
       <option value="3">Dorm 3</option>
@@ -184,13 +159,16 @@ const handleFloorChange = (event) => {
     </select>
     <select onChange={handleFloorChange} value={selectedFloor} disabled={selectedDorm === 'all'} className="select select-bordered max-w-xs" style={{ transform: 'translateX(10px)' }}>
       <option value="all">Floor</option>
-      {/* Render 5 floor options for dorms 1-5, and 13 for dorms 6-7 */}
       {['1', '2', '3', '4', '5'].includes(selectedDorm) && (
         <>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
+        </>
+      )}
+      {['5'].includes(selectedDorm) && (
+        <>
           <option value="5">5</option>
         </>
       )}
